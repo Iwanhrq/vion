@@ -5,6 +5,10 @@ import { useState } from 'react';
 import { Image, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
+//firebase imports
+import {auth, db} from "../../firebaseConfig"
+import {createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup} from "firebase/auth"
+import {doc, setDoc, serverTimestamp} from "firebase/firestore"
 
 
 const Wave = () => (
@@ -30,6 +34,8 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
+    const [error, setError] = useState<string | null > (null);
+
     const [fontsLoaded] = useFonts({
         Poppins_500Medium,
     });
@@ -37,6 +43,70 @@ export default function Login() {
     if (!fontsLoaded) {
         return null; // ou um <LoadingScreen /> se quiser
     }
+    const registerprovider = async (typeregister: string) =>{
+    try{
+        const provider = new GoogleAuthProvider()
+        const result = await signInWithPopup(auth, provider)
+               
+        await setDoc(
+            doc(db, 'users', result.user.uid), {
+            type: "Google",
+            name: result.user.displayName,
+            email: result.user.email,
+            createdAt: serverTimestamp(),
+        },
+        {
+            merge: true
+        });
+            console.log("Registro feito com sucesso", result.user)
+                
+            router.push('/(tabs)/home' as any)
+      }
+      catch(error: any){
+        setError("Erro" + error.message);
+      }
+    }
+
+    
+
+    //funções de registro
+    const handleregister = async () =>
+    {
+        if(!name || !email || !password || !confirmPassword){
+        setError('Erro, Preencha todos os campos');
+        return;
+        }
+
+        if(password != confirmPassword){
+        setError('Erro, senhas diferentes');
+        return;
+        }
+
+        try{
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+            const uid = userCredential.user.uid;
+
+            await setDoc(doc(db, "users", uid),{
+                type: "email/senha",
+                name: name,
+                email: email,
+                createdAt: serverTimestamp(),
+            })
+            console.log("sucesso", "Conta criada com sucesso")
+            setName('')
+            setEmail('')
+            setPassword('')
+            setConfirmPassword('')
+
+            router.push("/(tabs)/home" as any)
+        }
+        catch(error: any){
+            setError("Erro" + error.message)
+        }
+    }
+
+
+
 
     return (
         <SafeAreaView style={styles.container}>
@@ -125,10 +195,11 @@ export default function Login() {
                                 />
                             </View>
 
-                            <TouchableOpacity style={styles.buttonLogin}>
-                                <Text style={styles.textLogin}>Login</Text>
+                            <TouchableOpacity onPress={handleregister} style={styles.buttonLogin}>
+                                <Text style={styles.textLogin}>Registro</Text>
                             </TouchableOpacity>
 
+                            {error && <Text style={styles.errorText}>{error}</Text>}
 
                             <View style={styles.dividerContainer}>
                                 <View style={styles.dividerLine} />
@@ -137,7 +208,7 @@ export default function Login() {
                             </View>
 
                             <View style={styles.buttons}>
-                                <TouchableOpacity style={styles.buttonMG}>
+                                <TouchableOpacity onPress={() => registerprovider("Google")} style={styles.buttonMG}>
                                     <Image
                                         source={require('../../assets/images/google.png')}
                                         style={styles.iconButtons}
@@ -288,5 +359,11 @@ const styles = StyleSheet.create({
         height: 16,
         marginLeft: 10,
     },
+    errorText: {
+        color: 'tomato',
+        marginTop: 10,
+        textAlign: 'center',
+        fontSize: 14,
+    }
 
 });

@@ -1,10 +1,30 @@
-import { Stack } from "expo-router";
+
+import { Stack } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { onAuthStateChanged } from 'firebase/auth';
+import React, { useEffect, useState } from 'react';
+import { auth } from '../firebaseConfig';
 
 export default function RootLayout() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsAuthenticated(!!user);
+    });
+    return unsubscribe;
+  }, []);
+
   return (
-    <Stack>
-      <Stack.Screen name="(panel)" options={{ headerShown: false }} />
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-    </Stack>
+    <>
+      <StatusBar style="dark" />
+      <Stack screenOptions={{ headerShown: false }}>
+        {!isAuthenticated ? (
+          <Stack.Screen name="(panel)" />
+        ) : (
+          <Stack.Screen name="(tabs)" />
+        )}
+      </Stack>
+    </>
   );
 }

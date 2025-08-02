@@ -5,7 +5,10 @@ import { useState } from 'react';
 import { Image, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
-
+//firebase import
+import { auth, db } from "../../firebaseConfig"
+import {setDoc, doc, serverTimestamp} from "firebase/firestore"
+import { signInWithEmailAndPassword, signInWithPopup,GoogleAuthProvider,FacebookAuthProvider } from "firebase/auth"
 
 const Wave = () => (
     <Svg
@@ -22,11 +25,14 @@ const Wave = () => (
 );
 
 
+
 export default function Login() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const router = useRouter();
+
+    const [error, setError] = useState<string | null > (null);
 
     const [fontsLoaded] = useFonts({
         Poppins_500Medium,
@@ -35,6 +41,67 @@ export default function Login() {
     if (!fontsLoaded) {
         return null; // ou um <LoadingScreen /> se quiser
     }
+
+    const loginpopup = async (typeregister: string) =>
+    {
+      try{
+            const provide = typeregister == "Google"
+            ? new GoogleAuthProvider()
+            : new FacebookAuthProvider()
+            
+      
+            const result = await signInWithPopup(auth, provide)
+      
+            
+            await setDoc(
+              doc(db, 'users', result.user.uid), {
+              type: "Google",
+              name: result.user.displayName,
+              email: result.user.email,
+              createdAt: serverTimestamp(),
+            },
+            {
+              merge: true
+            });
+              console.log("Login feito com sucesso", result.user)
+                    
+              router.push('/(tabs)/home' as any)
+            }
+        catch(error: any){
+              setError("Erro" + error.message);
+            }
+      }
+
+  const handleLogin = async () => {
+    if(!email || !password)
+    {
+      setError("Coloca Login e Senha")
+      return
+    }
+
+    setError(null)
+
+    try{
+      const UserCredencial = await signInWithEmailAndPassword(auth, email, password)
+      console.log("Usuario autenticado", UserCredencial.user.email)    
+      router.push('/(tabs)/home' as any)
+
+    }
+    catch(err: any){
+      if(err.code === "auth/user-not-found"){
+        setError("Usuario não encontrado")
+      } 
+      else if (err.code === "auth/wrong-password")
+      {
+        setError("Senha errada")
+      }
+      else{
+        setError("Erro na autenticação, tente novamente")
+      }
+    }
+
+  }
+
 
     return (
         <SafeAreaView style={styles.container}>
@@ -93,10 +160,11 @@ export default function Login() {
                                 />
                             </View>
 
-                            <TouchableOpacity style={styles.buttonLogin}>
+                            <TouchableOpacity onPress={() => handleLogin()} style={styles.buttonLogin}>
                                 <Text style={styles.textLogin}>Login</Text>
                             </TouchableOpacity>
 
+                            {error && <Text style={styles.errorText}>{error}</Text>}
 
                             <View style={styles.dividerContainer}>
                                 <View style={styles.dividerLine} />
@@ -105,7 +173,7 @@ export default function Login() {
                             </View>
 
                             <View style={styles.buttons}>
-                                <TouchableOpacity style={styles.buttonMG}>
+                                <TouchableOpacity onPress={() => loginpopup("Google")} style={styles.buttonMG}>
                                     <Image
                                         source={require('../../assets/images/google.png')}
                                         style={styles.iconButtons}
@@ -256,6 +324,11 @@ const styles = StyleSheet.create({
         width: 16,
         height: 16,
     },
-
+    errorText: {
+        color: 'tomato',
+        marginTop: 10,
+        textAlign: 'center',
+        fontSize: 14,
+    }
 
 });
