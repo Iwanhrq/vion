@@ -1,17 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
-import { StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, } from 'react-native';
 import { auth } from "../../firebaseConfig"
+import { useTheme } from '../../constants/ThemeContext';
 
-
-
-export default function Home() 
-{
-  const [error, setError] = useState<string | null > (null);
+export default function Home() {
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const { colors } = useTheme();
 
   //função para deslogar da conta       
-   const handleLogout = async () => {
+  const handleLogout = async () => {
     try {
       await auth.signOut();
       router.push('/(panel)/outset' as any)
@@ -26,29 +25,47 @@ export default function Home()
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Bem-vindo</Text>
-  
-    {error && <Text style={styles.errorText}>{error}</Text>}
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      
 
-    <TouchableOpacity onPress={handleLogout}>
-      <Text style={styles.text}>sair</Text>
-    </TouchableOpacity>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      {/*
+      <Text style={[styles.text, { color: colors.text }]}>Bem-vindo</Text>
+
+      {error && <Text style={styles.errorText}>{error}</Text>}
+
+      <TouchableOpacity onPress={handleLogout}>
+        <Text style={[styles.text, { color: colors.text }]}>sair</Text>
+      </TouchableOpacity>
+      */}
     </View>
   );
 
-  
+
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center'
   },
   text: {
-    color: '#000',
     fontSize: 20
   },
   errorText: {

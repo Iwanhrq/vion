@@ -189,7 +189,7 @@ export default function Login() {
                             </View>
 
                             <TouchableOpacity onPress={handleregister} style={styles.buttonLogin}>
-                                <Text style={styles.textLogin}>Registro</Text>
+                                <Text style={styles.textLogin}>Cadastrar</Text>
                             </TouchableOpacity>
 
                             {error && <Text style={styles.errorText}>{error}</Text>}

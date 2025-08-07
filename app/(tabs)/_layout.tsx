@@ -1,13 +1,17 @@
 import { FontAwesome } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
+import { useTheme } from '../../constants/ThemeContext';
 
 export default function TabsLayout() {
+  const { colors } = useTheme();
+
   return (
     <Tabs screenOptions={{
-      tabBarActiveTintColor: '#fff',
-      tabBarInactiveTintColor: '#000',
+      tabBarActiveTintColor: colors.tabIconSelected,
+      tabBarInactiveTintColor: colors.tabIconDefault,
       tabBarStyle: {
-        backgroundColor: '#000',
+        backgroundColor: colors.background,
+        borderTopColor: colors.icon + '20',
       },
       headerShown: false,
       tabBarShowLabel: false,
@@ -16,6 +20,12 @@ export default function TabsLayout() {
         name="home"
         options={{
           tabBarIcon: ({ color }) => <FontAwesome name="home" size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          tabBarIcon: ({ color }) => <FontAwesome name="user" size={24} color={color} />,
         }}
       />
     </Tabs>

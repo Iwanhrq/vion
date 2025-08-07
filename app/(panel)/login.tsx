@@ -3,34 +3,32 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Image, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
+import { useTheme } from '../../constants/ThemeContext';
 
 //firebase import
-import { auth, db } from "../../firebaseConfig"
-import { setDoc, doc, serverTimestamp } from "firebase/firestore"
-import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth"
+import { FacebookAuthProvider, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { auth, db } from "../../firebaseConfig";
 
-const Wave = () => (
+const Wave = ({ waveColor }: { waveColor: string }) => (
     <Svg
         viewBox="0 0 1440 320"
-        style={styles.wave} // Aqui entra o estilo com `position: absolute`
+        style={styles.wave}
         preserveAspectRatio="none"
     >
         <Path
-            fill="#430065"
+            fill={waveColor}
             fillOpacity="1"
             d="M0,64L80,58.7C160,53,320,43,480,80C640,117,800,203,960,240C1120,277,1280,267,1360,261.3L1440,256L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"
         />
     </Svg>
 );
 
-
-
 export default function Login() {
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const router = useRouter();
-
+    const { colors } = useTheme();
     const [error, setError] = useState<string | null>(null);
 
     const [fontsLoaded] = useFonts({
@@ -38,7 +36,7 @@ export default function Login() {
     });
 
     if (!fontsLoaded) {
-        return null; // ou um <LoadingScreen /> se quiser
+        return null;
     }
 
     const loginpopup = async (typeregister: string) => {
@@ -47,9 +45,7 @@ export default function Login() {
                 ? new GoogleAuthProvider()
                 : new FacebookAuthProvider()
 
-
             const result = await signInWithPopup(auth, provide)
-
 
             await setDoc(
                 doc(db, 'users', result.user.uid), {
@@ -95,39 +91,37 @@ export default function Login() {
                 setError("Erro na autenticação, tente novamente")
             }
         }
-
     }
 
-
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
                 <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
 
-                    <View style={styles.header}>
+                    <View style={[styles.header, { backgroundColor: colors.loginHeader }]}>
                         <TouchableOpacity onPress={() => router.push('/outset')} style={styles.backButton}>
                             <Image
                                 source={require('../../assets/images/seta.png')}
                                 style={styles.icon}
                             />
                         </TouchableOpacity>
-                        <Wave />
+                        <Wave waveColor={colors.loginWave} />
                     </View>
 
                     <View style={styles.content}>
-                        <Text style={styles.title}>Bem-vindo(a)</Text>
-                        <Text style={styles.subtitle}>Faça login com a sua conta</Text>
+                        <Text style={[styles.title, { color: colors.text }]}>Bem-vindo(a)</Text>
+                        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>Faça login com a sua conta</Text>
 
                         <View style={styles.form}>
-                            <View style={styles.inputContainer}>
+                            <View style={[styles.inputContainer, { borderBottomColor: colors.border }]}>
                                 <TextInput
-                                    style={styles.input}
+                                    style={[styles.input, { color: colors.text }]}
                                     placeholder="Email"
                                     value={email}
                                     onChangeText={setEmail}
                                     keyboardType="email-address"
                                     autoCapitalize="none"
-                                    placeholderTextColor="rgba(255,255,255,0.5)"
+                                    placeholderTextColor={colors.placeholder}
                                 />
                                 <Image
                                     source={require('../../assets/images/mail.png')}
@@ -135,14 +129,14 @@ export default function Login() {
                                 />
                             </View>
 
-                            <View style={styles.inputContainer}>
+                            <View style={[styles.inputContainer, { borderBottomColor: colors.border }]}>
                                 <TextInput
-                                    style={styles.input}
+                                    style={[styles.input, { color: colors.text }]}
                                     placeholder="Senha"
                                     value={password}
                                     onChangeText={setPassword}
                                     secureTextEntry
-                                    placeholderTextColor="rgba(255,255,255,0.5)"
+                                    placeholderTextColor={colors.placeholder}
                                 />
                                 <Image
                                     source={require('../../assets/images/password.png')}
@@ -150,27 +144,27 @@ export default function Login() {
                                 />
                             </View>
 
-                            <TouchableOpacity onPress={() => handleLogin()} style={styles.buttonLogin}>
-                                <Text style={styles.textLogin}>Login</Text>
+                            <TouchableOpacity onPress={() => handleLogin()} style={[styles.buttonLogin, { backgroundColor: colors.buttonPrimary }]}>
+                                <Text style={[styles.textLogin, { color: colors.buttonText }]}>Login</Text>
                             </TouchableOpacity>
 
                             {error && <Text style={styles.errorText}>{error}</Text>}
 
                             <View style={styles.dividerContainer}>
-                                <View style={styles.dividerLine} />
-                                <Text style={styles.dividerText}>OU</Text>
-                                <View style={styles.dividerLine} />
+                                <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
+                                <Text style={[styles.dividerText, { color: colors.textSecondary }]}>OU</Text>
+                                <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
                             </View>
 
                             <View style={styles.buttons}>
-                                <TouchableOpacity onPress={() => loginpopup("Google")} style={styles.buttonMG}>
+                                <TouchableOpacity onPress={() => loginpopup("Google")} style={[styles.buttonMG, { borderColor: colors.border }]}>
                                     <Image
                                         source={require('../../assets/images/google.png')}
                                         style={styles.iconButtons}
                                     />
                                 </TouchableOpacity>
 
-                                <TouchableOpacity style={styles.buttonMG}>
+                                <TouchableOpacity style={[styles.buttonMG, { borderColor: colors.border }]}>
                                     <Image
                                         source={require('../../assets/images/microsoft.png')}
                                         style={styles.iconButtons}
@@ -190,12 +184,10 @@ export default function Login() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#000",
     },
     header: {
         padding: 23,
         height: 120,
-        backgroundColor: "#430065",
         position: "relative",
     },
     wave: {
@@ -236,14 +228,13 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     title: {
-        color: '#fff',
         fontSize: 32,
         fontWeight: 'semibold',
         paddingLeft: 10,
         fontFamily: "Poppins_500Medium"
     },
     subtitle: {
-        color: 'rgba(255,255,255,0.5)',
+        fontSize: 16,
     },
     form: {
         paddingTop: 60,
@@ -255,11 +246,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         height: 45,
         borderBottomWidth: 1,
-        borderBottomColor: 'rgba(255,255,255,0.3)',
     },
     input: {
         flex: 1,
-        color: 'rgba(255,255,255,0.5)',
         fontSize: 16,
     },
     inputIcon: {
@@ -269,14 +258,12 @@ const styles = StyleSheet.create({
     },
     buttonLogin: {
         height: 50,
-        backgroundColor: '#430065',
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 25,
         borderRadius: 20,
     },
     textLogin: {
-        color: '#fff',
         fontWeight: 'bold',
         fontSize: 16,
     },
@@ -287,11 +274,9 @@ const styles = StyleSheet.create({
     dividerLine: {
         flex: 1,
         height: 1,
-        backgroundColor: 'rgba(255,255,255,0.5)',
     },
     dividerText: {
         marginHorizontal: 12,
-        color: 'rgba(255,255,255,0.5)',
         fontSize: 10,
     },
     buttons: {
@@ -303,22 +288,19 @@ const styles = StyleSheet.create({
         height: 40,
         width: 40,
         borderWidth: 1,
-        borderColor: "#fff",
         borderRadius: 20,
         alignItems: "center",
         justifyContent: "center",
         flexDirection: "row",
     },
-
     iconButtons: {
         width: 16,
         height: 16,
     },
     errorText: {
-        color: 'tomato',
+        color: '#F44336',
         marginTop: 10,
         textAlign: 'center',
         fontSize: 14,
     }
-
 });
