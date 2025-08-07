@@ -1,5 +1,4 @@
 import { Poppins_500Medium, useFonts } from '@expo-google-fonts/poppins';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Image, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
@@ -7,8 +6,8 @@ import Svg, { Path } from 'react-native-svg';
 
 //firebase import
 import { auth, db } from "../../firebaseConfig"
-import {setDoc, doc, serverTimestamp} from "firebase/firestore"
-import { signInWithEmailAndPassword, signInWithPopup,GoogleAuthProvider,FacebookAuthProvider } from "firebase/auth"
+import { setDoc, doc, serverTimestamp } from "firebase/firestore"
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth"
 
 const Wave = () => (
     <Svg
@@ -32,7 +31,7 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const router = useRouter();
 
-    const [error, setError] = useState<string | null > (null);
+    const [error, setError] = useState<string | null>(null);
 
     const [fontsLoaded] = useFonts({
         Poppins_500Medium,
@@ -42,65 +41,62 @@ export default function Login() {
         return null; // ou um <LoadingScreen /> se quiser
     }
 
-    const loginpopup = async (typeregister: string) =>
-    {
-      try{
+    const loginpopup = async (typeregister: string) => {
+        try {
             const provide = typeregister == "Google"
-            ? new GoogleAuthProvider()
-            : new FacebookAuthProvider()
-            
-      
+                ? new GoogleAuthProvider()
+                : new FacebookAuthProvider()
+
+
             const result = await signInWithPopup(auth, provide)
-      
-            
+
+
             await setDoc(
-              doc(db, 'users', result.user.uid), {
-              type: "Google",
-              name: result.user.displayName,
-              email: result.user.email,
-              createdAt: serverTimestamp(),
+                doc(db, 'users', result.user.uid), {
+                type: "Google",
+                name: result.user.displayName,
+                email: result.user.email,
+                createdAt: serverTimestamp(),
             },
-            {
-              merge: true
-            });
-              console.log("Login feito com sucesso", result.user)
-                    
-              router.push('/(tabs)/home' as any)
+                {
+                    merge: true
+                });
+            console.log("Login feito com sucesso", result.user)
+
+            router.push('/(tabs)/home' as any)
+        }
+        catch (error: any) {
+            setError("Erro" + error.message);
+        }
+    }
+
+    const handleLogin = async () => {
+        if (!email || !password) {
+            setError("Coloca Login e Senha")
+            return
+        }
+
+        setError(null)
+
+        try {
+            const UserCredencial = await signInWithEmailAndPassword(auth, email, password)
+            console.log("Usuario autenticado", UserCredencial.user.email)
+            router.push('/(tabs)/home' as any)
+
+        }
+        catch (err: any) {
+            if (err.code === "auth/user-not-found") {
+                setError("Usuario não encontrado")
             }
-        catch(error: any){
-              setError("Erro" + error.message);
+            else if (err.code === "auth/wrong-password") {
+                setError("Senha errada")
             }
-      }
-
-  const handleLogin = async () => {
-    if(!email || !password)
-    {
-      setError("Coloca Login e Senha")
-      return
-    }
-
-    setError(null)
-
-    try{
-      const UserCredencial = await signInWithEmailAndPassword(auth, email, password)
-      console.log("Usuario autenticado", UserCredencial.user.email)    
-      router.push('/(tabs)/home' as any)
+            else {
+                setError("Erro na autenticação, tente novamente")
+            }
+        }
 
     }
-    catch(err: any){
-      if(err.code === "auth/user-not-found"){
-        setError("Usuario não encontrado")
-      } 
-      else if (err.code === "auth/wrong-password")
-      {
-        setError("Senha errada")
-      }
-      else{
-        setError("Erro na autenticação, tente novamente")
-      }
-    }
-
-  }
 
 
     return (
@@ -110,16 +106,10 @@ export default function Login() {
 
                     <View style={styles.header}>
                         <TouchableOpacity onPress={() => router.push('/outset')} style={styles.backButton}>
-                            <LinearGradient
-                                colors={['#FFFFFF', '#FFFFFF', '#6E02A8']}
-                                locations={[0, 0.33, 0.97]}
-                                style={styles.backButtonCircle}
-                            >
-                                <Image
-                                    source={require('../../assets/images/seta.png')}
-                                    style={styles.icon}
-                                />
-                            </LinearGradient>
+                            <Image
+                                source={require('../../assets/images/seta.png')}
+                                style={styles.icon}
+                            />
                         </TouchableOpacity>
                         <Wave />
                     </View>
@@ -206,11 +196,11 @@ const styles = StyleSheet.create({
         padding: 23,
         height: 120,
         backgroundColor: "#430065",
-        position: "relative", 
+        position: "relative",
     },
     wave: {
         position: "absolute",
-        bottom: -80, 
+        bottom: -80,
         left: 0,
         right: 0,
         width: "120%",
@@ -219,7 +209,7 @@ const styles = StyleSheet.create({
     },
     backButton: {
         zIndex: 1,
-        top: 25,
+        top: 30,
     },
     backButtonCircle: {
         width: 45,
@@ -311,15 +301,15 @@ const styles = StyleSheet.create({
     },
     buttonMG: {
         height: 40,
-        width: 40, 
+        width: 40,
         borderWidth: 1,
         borderColor: "#fff",
-        borderRadius: 20, 
+        borderRadius: 20,
         alignItems: "center",
         justifyContent: "center",
         flexDirection: "row",
-      },
-      
+    },
+
     iconButtons: {
         width: 16,
         height: 16,

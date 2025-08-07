@@ -1,14 +1,13 @@
 import { Poppins_500Medium, useFonts } from '@expo-google-fonts/poppins';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Image, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
 //firebase imports
-import {auth, db} from "../../firebaseConfig"
-import {createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup} from "firebase/auth"
-import {doc, setDoc, serverTimestamp} from "firebase/firestore"
+import { auth, db } from "../../firebaseConfig"
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth"
+import { doc, setDoc, serverTimestamp } from "firebase/firestore"
 
 
 const Wave = () => (
@@ -34,7 +33,7 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
-    const [error, setError] = useState<string | null > (null);
+    const [error, setError] = useState<string | null>(null);
 
     const [fontsLoaded] = useFonts({
         Poppins_500Medium,
@@ -43,50 +42,49 @@ export default function Login() {
     if (!fontsLoaded) {
         return null; // ou um <LoadingScreen /> se quiser
     }
-    const registerprovider = async (typeregister: string) =>{
-    try{
-        const provider = new GoogleAuthProvider()
-        const result = await signInWithPopup(auth, provider)
-               
-        await setDoc(
-            doc(db, 'users', result.user.uid), {
-            type: "Google",
-            name: result.user.displayName,
-            email: result.user.email,
-            createdAt: serverTimestamp(),
-        },
-        {
-            merge: true
-        });
+    const registerprovider = async (typeregister: string) => {
+        try {
+            const provider = new GoogleAuthProvider()
+            const result = await signInWithPopup(auth, provider)
+
+            await setDoc(
+                doc(db, 'users', result.user.uid), {
+                type: "Google",
+                name: result.user.displayName,
+                email: result.user.email,
+                createdAt: serverTimestamp(),
+            },
+                {
+                    merge: true
+                });
             console.log("Registro feito com sucesso", result.user)
-                
+
             router.push('/(tabs)/home' as any)
-      }
-      catch(error: any){
-        setError("Erro" + error.message);
-      }
+        }
+        catch (error: any) {
+            setError("Erro" + error.message);
+        }
     }
 
-    
+
 
     //funções de registro
-    const handleregister = async () =>
-    {
-        if(!name || !email || !password || !confirmPassword){
-        setError('Erro, Preencha todos os campos');
-        return;
+    const handleregister = async () => {
+        if (!name || !email || !password || !confirmPassword) {
+            setError('Erro, Preencha todos os campos');
+            return;
         }
 
-        if(password != confirmPassword){
-        setError('Erro, senhas diferentes');
-        return;
+        if (password != confirmPassword) {
+            setError('Erro, senhas diferentes');
+            return;
         }
 
-        try{
+        try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password)
             const uid = userCredential.user.uid;
 
-            await setDoc(doc(db, "users", uid),{
+            await setDoc(doc(db, "users", uid), {
                 type: "email/senha",
                 name: name,
                 email: email,
@@ -100,7 +98,7 @@ export default function Login() {
 
             router.push("/(tabs)/home" as any)
         }
-        catch(error: any){
+        catch (error: any) {
             setError("Erro" + error.message)
         }
     }
@@ -115,16 +113,11 @@ export default function Login() {
 
                     <View style={styles.header}>
                         <TouchableOpacity onPress={() => router.push('/outset')} style={styles.backButton}>
-                            <LinearGradient
-                                colors={['#FFFFFF', '#FFFFFF', '#6E02A8']}
-                                locations={[0, 0.33, 0.97]}
-                                style={styles.backButtonCircle}
-                            >
-                                <Image
-                                    source={require('../../assets/images/seta.png')}
-                                    style={styles.icon}
-                                />
-                            </LinearGradient>
+
+                            <Image
+                                source={require('../../assets/images/seta.png')}
+                                style={styles.icon}
+                            />
                         </TouchableOpacity>
                         <Wave />
                     </View>
@@ -252,7 +245,7 @@ const styles = StyleSheet.create({
     },
     backButton: {
         zIndex: 1,
-        top: 25,
+        top: 30,
     },
     backButtonCircle: {
         width: 45,
