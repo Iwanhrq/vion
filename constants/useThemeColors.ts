@@ -5,6 +5,7 @@
 // Ele organiza as cores em categorias para facilitar o uso nos componentes
 
 import { useTheme } from './ThemeContext';
+import { GlobalColors } from './Colors';
 
 /**
  * Hook que fornece cores organizadas do tema atual
@@ -50,6 +51,13 @@ export const useThemeColors = () => {
     icon: colors.icon,             // Cor dos ícones
     
     // ========================================
+    // CORES GLOBAIS (INDEPENDENTES DO TEMA)
+    // ========================================
+    headerBackground: GlobalColors.headerBackground, // Cor de fundo dos headers (roxo)
+    buttonPrimary: GlobalColors.buttonPrimary,       // Cor dos botões primários (roxo)
+    buttonSecondary: GlobalColors.buttonSecondary,   // Cor dos botões secundários (rosa)
+    
+    // ========================================
     // CORES PARA ELEMENTOS ESPECÍFICOS
     // ========================================
     card: currentTheme === 'dark' ? '#1a1a1a' : '#f8f9fa',     // Fundo de cards
@@ -89,10 +97,8 @@ export const useThemeColors = () => {
     inputBorder: currentTheme === 'dark' ? '#444' : '#ddd',           // Borda dos inputs
     
     // ========================================
-    // CORES DE BOTÕES
+    // CORES DE BOTÕES (USANDO CORES GLOBAIS)
     // ========================================
-    buttonPrimary: colors.tint,    // Cor principal dos botões
-    buttonSecondary: currentTheme === 'dark' ? '#333' : '#f0f0f0',    // Cor secundária dos botões
-    buttonText: currentTheme === 'dark' ? '#fff' : '#000',            // Cor do texto dos botões
+    buttonText: currentTheme === 'dark' ? '#fff' : '#fff',            // Cor do texto dos botões (branco para contraste)
   };
 };

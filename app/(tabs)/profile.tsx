@@ -17,13 +17,7 @@ export default function ProfileScreen() {
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
-      <View style={styles.header}>
-        <View style={[styles.avatar, { backgroundColor: colors.tint }]}>
-          <Ionicons name="person" size={40} color="#fff" />
-        </View>
-        <Text style={[styles.name, { color: colors.text }]}>Usuário</Text>
-        <Text style={[styles.email, { color: colors.icon }]}>usuario@email.com</Text>
-      </View>
+      
 
       <ThemeToggle />
 
@@ -51,27 +45,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  header: {
-    alignItems: 'center',
-    padding: 20,
-    paddingTop: 40,
-  },
-  avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16,
-  },
-  name: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 4,
-  },
-  email: {
-    fontSize: 16,
+    paddingTop: 60,
   },
   menuSection: {
     marginTop: 20,

@@ -1,4 +1,4 @@
-import { Poppins_500Medium, useFonts } from '@expo-google-fonts/poppins';
+import { Poppins_600SemiBold, useFonts } from '@expo-google-fonts/poppins';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Image, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
@@ -32,7 +32,7 @@ export default function Login() {
     const [error, setError] = useState<string | null>(null);
 
     const [fontsLoaded] = useFonts({
-        Poppins_500Medium,
+        Poppins_600SemiBold,
     });
 
     if (!fontsLoaded) {
@@ -149,7 +149,7 @@ export default function Login() {
                             </TouchableOpacity>
 
                             {error && <Text style={styles.errorText}>{error}</Text>}
-
+{/*}
                             <View style={styles.dividerContainer}>
                                 <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
                                 <Text style={[styles.dividerText, { color: colors.textSecondary }]}>OU</Text>
@@ -171,6 +171,8 @@ export default function Login() {
                                     />
                                 </TouchableOpacity>
                             </View>
+
+*/}
 
                         </View>
                     </View>
@@ -231,7 +233,7 @@ const styles = StyleSheet.create({
         fontSize: 32,
         fontWeight: 'semibold',
         paddingLeft: 10,
-        fontFamily: "Poppins_500Medium"
+        fontFamily: "Poppins_600SemiBold"
     },
     subtitle: {
         fontSize: 16,

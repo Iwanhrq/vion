@@ -5,8 +5,18 @@
 // Cada cor tem um propósito específico e se adapta automaticamente ao tema
 
 // Cores principais do tema (cores de destaque)
-const tintColorLight = '#0a7ea4'; // Azul principal para tema claro
-const tintColorDark = '#fff';     // Branco para tema escuro
+const tintColorLight = '#430065'; 
+const tintColorDark = '#f0f0f0';     // Branco para tema escuro
+
+// ========================================
+// CORES GLOBAIS (INDEPENDENTES DO TEMA)
+// ========================================
+// Estas cores são usadas em ambos os temas (claro e escuro)
+export const GlobalColors = {
+  headerBackground: '#430065',    // Cor de fundo dos headers (roxo)
+  buttonPrimary: '#430065',       // Cor dos botões primários (roxo)
+  buttonSecondary: '#EB3C7D',     // Cor dos botões secundários (rosa)
+};
 
 export const Colors = {
   // ========================================
@@ -14,8 +24,9 @@ export const Colors = {
   // ========================================
   light: {
     // Cores básicas do tema
+    textTitle: '#660099', // Texto dos títulos
     text: '#11181C',              // Texto principal (quase preto)
-    background: '#fff',            // Fundo principal (branco)
+    background: '#F5F5F5',            // Fundo principal (branco)
     tint: tintColorLight,         // Cor de destaque (azul)
     icon: '#687076',              // Cor dos ícones (cinza)
     
@@ -65,23 +76,28 @@ export const Colors = {
     // ========================================
     // CORES DE BOTÕES
     // ========================================
-    buttonPrimary: tintColorLight, // Cor principal dos botões
-    buttonSecondary: '#f0f0f0',   // Cor secundária dos botões
-    buttonText: '#000',           // Cor do texto dos botões
+    buttonPrimary: GlobalColors.buttonPrimary, // Cor principal dos botões (roxo global)
+    buttonSecondary: GlobalColors.buttonSecondary, // Cor secundária dos botões (rosa global)
+    buttonText: '#fff',           // Cor do texto dos botões (branco para contraste)
     
     // ========================================
     // CORES ESPECÍFICAS PARA LOGIN
     // ========================================
-    loginHeader: '#0a7ea4',       // Cor do header da tela de login
-    loginWave: '#0a7ea4',         // Cor da onda SVG do login
+    loginHeader: GlobalColors.headerBackground, // Cor do header da tela de login (roxo global)
+    loginWave: GlobalColors.headerBackground,   // Cor da onda SVG do login (roxo global)
   },
 
+
+
+
+  
   // ========================================
   // TEMA ESCURO
   // ========================================
   dark: {
     // Cores básicas do tema
     text: '#fff',                 // Texto principal (branco)
+    textTitle: '#ffff', // Texto dos títulos
     background: '#000',           // Fundo principal (preto)
     tint: tintColorDark,         // Cor de destaque (branco)
     icon: '#9BA1A6',             // Cor dos ícones (cinza claro)
@@ -132,14 +148,14 @@ export const Colors = {
     // ========================================
     // CORES DE BOTÕES
     // ========================================
-    buttonPrimary: '#430065',     // Cor principal dos botões (roxo)
-    buttonSecondary: '#333',      // Cor secundária dos botões (cinza escuro)
+    buttonPrimary: GlobalColors.buttonPrimary, // Cor principal dos botões (roxo global)
+    buttonSecondary: GlobalColors.buttonSecondary, // Cor secundária dos botões (rosa global)
     buttonText: '#fff',           // Cor do texto dos botões (branco)
     
     // ========================================
     // CORES ESPECÍFICAS PARA LOGIN
     // ========================================
-    loginHeader: '#430065',       // Cor do header da tela de login (roxo)
-    loginWave: '#430065',         // Cor da onda SVG do login (roxo)
+    loginHeader: GlobalColors.headerBackground, // Cor do header da tela de login (roxo global)
+    loginWave: GlobalColors.headerBackground,   // Cor da onda SVG do login (roxo global)
   },
 };
