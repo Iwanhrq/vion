@@ -1,16 +1,31 @@
+// Navegação
 import { useRouter } from 'expo-router';
+
+// React
 import { useEffect, useState } from 'react';
-import { Animated, Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
+// Componentes nativos do React Native
+import {
+  Animated,
+  Dimensions,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+
+// Temas personalizados
 import { useTheme } from '../../constants/ThemeContext';
 import { useThemeColors } from '../../constants/useThemeColors';
-
 
 // Dados estáticos dos roteadores
 const ROUTERS = [
   { id: '1', name: 'Roteador 1', description: 'Veja mais sobre esse roteador.' },
   { id: '2', name: 'Roteador 2', description: 'Veja mais sobre esse roteador.' },
   { id: '3', name: 'Roteador 3', description: 'Veja mais sobre esse roteador.' },
-  { id: '4', name: 'Roteador 4', description: 'Veja mais sobre esse roteador.' }
+  { id: '4', name: 'Roteador 4', description: 'Veja mais sobre esse roteador.' },
 ];
 
 // Dados estáticos dos relatórios
@@ -20,7 +35,6 @@ const REPORTS = [
   { id: '3', title: 'Relatório de Performance', description: 'Métricas de aprendizado', date: '10/12/2024', status: 'Pendente' },
   { id: '4', title: 'Relatório de Conclusão', description: 'Módulos finalizados', date: '05/12/2024', status: 'Concluído' },
 ];
-
 
 // Dados estáticos das dicas
 const tips = [
@@ -33,9 +47,12 @@ const tips = [
 export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [showHeader, setShowHeader] = useState(true);
+
   const headerOpacity = new Animated.Value(1);
   const headerHeight = new Animated.Value(250);
+
   const screenWidth = Dimensions.get('window').width;
+
   const router = useRouter();
   const { colors } = useTheme();
   const globalColors = useThemeColors();
@@ -48,9 +65,10 @@ export default function Home() {
     router.replace('/(panel)/login');
   };
 
+  // Anima o header conforme o scroll: oculta ou mostra
   const handleScroll = (event: any) => {
     const scrollY = event.nativeEvent.contentOffset.y;
-    
+
     if (scrollY > 100 && showHeader) {
       setShowHeader(false);
       Animated.parallel([
@@ -90,117 +108,110 @@ export default function Home() {
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
-                 <Animated.View 
-           style={[
-             styles.header, 
-             { 
-               backgroundColor: globalColors.headerBackground,
-               opacity: headerOpacity,
-               height: headerHeight,
-             }
-           ]}
-         >
-           <Image
-             source={require('../../assets/images/fundoHeader.png')}
-             style={styles.headerBackground}
-             resizeMode="contain"
-           />
-           <View style={styles.headerTextContainer}>
-             <Text style={styles.headerPercentage}>100%</Text>
-             <Text style={styles.headerStatus}>Sua rede está segura</Text>
-             <Text style={styles.headerAction}>Clique aqui para analisar a rede novamente</Text>
-           </View>
-         </Animated.View>
+        {/* Header com animação */}
+        <Animated.View
+          style={[
+            styles.header,
+            {
+              backgroundColor: globalColors.headerBackground,
+              opacity: headerOpacity,
+              height: headerHeight,
+            },
+          ]}
+        >
+          <Image
+            source={require('../../assets/images/fundoHeader.png')}
+            style={styles.headerBackground}
+            resizeMode="contain"
+          />
+          <View style={styles.headerTextContainer}>
+            <Text style={styles.headerPercentage}>100%</Text>
+            <Text style={styles.headerStatus}>Sua rede está segura</Text>
+            <Text style={styles.headerAction}>Clique aqui para analisar a rede novamente</Text>
+          </View>
+        </Animated.View>
 
+        {/* Conteúdo principal */}
         <View style={[styles.content, { backgroundColor: colors.background }]}>
-        {/* Seção Roteadores */}
-        <View style={styles.routers}>
-          <Text style={[styles.sectionTitle, { color: colors.textTitle }]}>Meus roteadores</Text>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.routersScroll}
-          >
-            {ROUTERS.map((router_item) => (
-              <TouchableOpacity
-                key={router_item.id}
-                style={[styles.routerCard, { backgroundColor: colors.card }]}
-              >
-                {/* Foto do roteador */}
-                <View style={styles.routerImageContainer}>
-                  <Image
-                    source={require('../../assets/images/roteador.png')}
-                  />
-                </View>
 
-                {/* Nome do roteador */}
-                <Text style={[styles.routerName, { color: colors.text }]}>{router_item.name}</Text>
+          {/* Seção: Meus Roteadores */}
+          <View style={styles.routers}>
+            <Text style={[styles.sectionTitle, { color: colors.textTitle }]}>Meus roteadores</Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.routersScroll}
+            >
+              {ROUTERS.map((router_item) => (
+                <TouchableOpacity
+                  key={router_item.id}
+                  style={[styles.routerCard, { backgroundColor: colors.card }]}
+                >
+                  <View style={styles.routerImageContainer}>
+                    <Image source={require('../../assets/images/roteador.png')} />
+                  </View>
+                  <Text style={[styles.routerName, { color: colors.text }]}>{router_item.name}</Text>
+                  <Text style={[styles.routerDescription, { color: colors.textSecondary }]} numberOfLines={2}>
+                    {router_item.description}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
 
-                {/* Descrição do roteador */}
-                <Text style={[styles.routerDescription, { color: colors.textSecondary }]} numberOfLines={2}>
-                  {router_item.description}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
+          {/* Linha divisória */}
+          <View style={[styles.divider, { backgroundColor: colors.border }]} />
 
-        {/* Linha divisória */}
-        <View style={[styles.divider, { backgroundColor: colors.border }]} />
+          {/* Seção: Relatórios */}
+          <View style={styles.reports}>
+            <Text style={[styles.sectionTitle, { color: colors.textTitle }]}>Histórico de relatórios</Text>
+            <View style={styles.reportsContainer}>
+              {REPORTS.map((report) => (
+                <TouchableOpacity
+                  key={report.id}
+                  style={[styles.reportCard, { backgroundColor: colors.card }]}
+                >
+                  {/* Conteúdo do relatório pode ser adicionado aqui */}
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
 
-        {/* Seção Relatórios */}
-        <View style={styles.reports}>
-          <Text style={[styles.sectionTitle, { color: colors.textTitle }]}>Histórico de relatórios</Text>
-          <View style={styles.reportsContainer}>
-            {REPORTS.map((report) => (
-              <TouchableOpacity
-                key={report.id}
-                style={[styles.reportCard, { backgroundColor: colors.card }]}
-              >
-                {/* Card vazio - apenas fundo */}
-              </TouchableOpacity>
-            ))}
+          {/* Linha divisória */}
+          <View style={[styles.divider, { backgroundColor: colors.border }]} />
+
+          {/* Seção: Dicas rápidas */}
+          <View style={styles.tipsContainer}>
+            <Text style={[styles.sectionTitle, { color: colors.textTitle }]}>Dicas rápidas</Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.tipsScroll}
+            >
+              {tips.map((tip) => (
+                <TouchableOpacity
+                  key={tip.id}
+                  style={[styles.tipCard, { backgroundColor: colors.card }]}
+                >
+                  <View style={[styles.tipImageContainer, { backgroundColor: globalColors.buttonPrimary }]} />
+                  <View style={styles.tipInfo}>
+                    <Text style={[styles.tipTitle, { color: colors.textTitle }]}>{tip.name}</Text>
+                    <Text style={[styles.tipText, { color: colors.textSecondary }]}>{tip.description}</Text>
+                    <TouchableOpacity style={[styles.buttonTip, { backgroundColor: colors.buttonSecondary }]}>
+                      <Text style={[styles.buttonTipText, { color: colors.buttonText }]}>Conhecer</Text>
+                    </TouchableOpacity>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
           </View>
         </View>
+      </ScrollView>
+    </View>
+  );
+}
 
-
-
-        {/* Linha divisória */}
-        <View style={[styles.divider, { backgroundColor: colors.border }]} />
-
-                 {/* Seção Dicas */}
-         <View style={styles.tipsContainer}>
-           <Text style={[styles.sectionTitle, { color: colors.textTitle }]}>Dicas rápidas</Text>
-           <ScrollView
-             horizontal
-             showsHorizontalScrollIndicator={false}
-             contentContainerStyle={styles.tipsScroll}
-           >
-             {tips.map((tip) => (
-               <TouchableOpacity
-                 key={tip.id}
-                 style={[styles.tipCard, { backgroundColor: colors.card }]}
-               >
-                 <View style={[styles.tipImageContainer, { backgroundColor: globalColors.buttonPrimary }]} />
-                 <View style={styles.tipInfo}>
-                   <Text style={[styles.tipTitle, { color: colors.textTitle }]}>{tip.name}</Text>
-                   <Text style={[styles.tipText, { color: colors.textSecondary }]}>{tip.description}</Text>
-                   <TouchableOpacity style={[styles.buttonTip, { backgroundColor: colors.buttonSecondary }]}>
-                     <Text style={[styles.buttonTipText, { color: colors.buttonText }]}>
-                       Conhecer
-                     </Text>
-                   </TouchableOpacity>
-                 </View>
-               </TouchableOpacity>
-             ))}
-           </ScrollView>
-         </View>
-       </View>
-       </ScrollView>
-     </View>
-   );
- }
-
+// Estilos da tela
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -256,12 +267,10 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 30,
   },
 
-
-
   // Seção Roteadores
   routers: {
     paddingTop: 20,
-    height: 250
+    height: 250,
   },
   sectionTitle: {
     paddingLeft: 15,
@@ -277,12 +286,9 @@ const styles = StyleSheet.create({
     marginRight: 15,
     padding: 5,
     borderRadius: 12,
-    width: 160, // Altura reduzida
+    width: 160,
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
@@ -307,32 +313,22 @@ const styles = StyleSheet.create({
   },
 
   // Seção Relatórios
-  reports: {
-
-  },
-  reportsContainer: {
-    // No specific styles needed for the container, just for the map
-  },
+  reports: {},
+  reportsContainer: {},
   reportCard: {
     height: 80,
     marginBottom: 12,
     padding: 15,
     borderRadius: 15,
-
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
 
-
   // Seção Dicas
-  tipsContainer: {
-  },
+  tipsContainer: {},
   tipsScroll: {
     paddingRight: 20,
   },
@@ -342,10 +338,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderRadius: 15,
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
@@ -363,7 +356,7 @@ const styles = StyleSheet.create({
   },
   tipTitle: {
     fontSize: 17,
-    fontWeight: 600,
+    fontWeight: '600',
     marginBottom: 4,
   },
   tipText: {
@@ -381,12 +374,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
 
-
-
-
-
-
-
+  // Outros
   errorText: {
     color: 'tomato',
     marginTop: 10,
@@ -403,5 +391,5 @@ const styles = StyleSheet.create({
     color: 'rgba(255,255,255,0.5)',
     fontSize: 14,
     paddingLeft: 7,
-  }
+  },
 });

@@ -1,104 +1,47 @@
-// ========================================
 // HOOK PERSONALIZADO PARA CORES DO TEMA
-// ========================================
-// Este arquivo fornece um hook que facilita o uso das cores do tema
-// Ele organiza as cores em categorias para facilitar o uso nos componentes
+// Detecta e atualiza as cores do tema conforme o sistema desde o início
 
-import { useTheme } from './ThemeContext';
-import { GlobalColors } from './Colors';
+import { useEffect, useState } from 'react';
+import { Appearance } from 'react-native';
+import { Colors } from './Colors';
 
-/**
- * Hook que fornece cores organizadas do tema atual
- * Facilita o uso das cores nos componentes, organizando-as por categoria
- * 
- * @returns {Object} Objeto com todas as cores organizadas por categoria
- * 
- * @example
- * ```typescript
- * const colors = useThemeColors();
- * 
- * // Uso básico
- * <View style={{ backgroundColor: colors.background }}>
- *   <Text style={{ color: colors.text }}>Texto</Text>
- * </View>
- * 
- * // Uso para botões
- * <TouchableOpacity style={{ backgroundColor: colors.buttonPrimary }}>
- *   <Text style={{ color: colors.buttonText }}>Botão</Text>
- * </TouchableOpacity>
- * 
- * // Uso para inputs
- * <TextInput 
- *   style={{ 
- *     backgroundColor: colors.inputBackground,
- *     borderColor: colors.inputBorder 
- *   }}
- *   placeholderTextColor={colors.placeholder}
- * />
- * ```
- */
 export const useThemeColors = () => {
-  // Obtém o tema atual e as cores
-  const { colors, currentTheme } = useTheme();
-  
+  const [isReady, setIsReady] = useState(false);                  // Indica quando o tema inicial foi detectado
+  const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>('light'); // Tema atual aplicado
+
+  useEffect(() => {
+    // Detecta o tema inicial do sistema
+    const detectInitialTheme = () => {
+      try {
+        const colorScheme = Appearance.getColorScheme();
+        const theme = colorScheme === 'dark' ? 'dark' : 'light';
+        setCurrentTheme(theme);
+        console.log('Tema inicial detectado:', theme);
+      } catch (error) {
+        console.log('Erro ao detectar tema inicial:', error);
+        setCurrentTheme('light'); // fallback para tema claro
+      }
+      setIsReady(true);
+    };
+
+    detectInitialTheme();
+
+    // Listener para mudanças no tema do sistema em tempo real
+    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
+      const newTheme = colorScheme === 'dark' ? 'dark' : 'light';
+      setCurrentTheme(newTheme);
+      console.log('Tema do sistema mudou para:', newTheme);
+    });
+
+    // Cleanup do listener ao desmontar o componente
+    return () => subscription?.remove();
+  }, []);
+
   return {
-    // ========================================
-    // CORES PRINCIPAIS (BÁSICAS)
-    // ========================================
-    background: colors.background,  // Fundo principal da tela
-    text: colors.text,             // Texto principal
-    tint: colors.tint,             // Cor de destaque/accent
-    icon: colors.icon,             // Cor dos ícones
-    
-    // ========================================
-    // CORES GLOBAIS (INDEPENDENTES DO TEMA)
-    // ========================================
-    headerBackground: GlobalColors.headerBackground, // Cor de fundo dos headers (roxo)
-    buttonPrimary: GlobalColors.buttonPrimary,       // Cor dos botões primários (roxo)
-    buttonSecondary: GlobalColors.buttonSecondary,   // Cor dos botões secundários (rosa)
-    
-    // ========================================
-    // CORES PARA ELEMENTOS ESPECÍFICOS
-    // ========================================
-    card: currentTheme === 'dark' ? '#1a1a1a' : '#f8f9fa',     // Fundo de cards
-    border: currentTheme === 'dark' ? '#333' : '#e0e0e0',       // Bordas
-    placeholder: currentTheme === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)', // Placeholder
-    shadow: currentTheme === 'dark' ? '#000' : '#000',          // Sombras
-    
-    // ========================================
-    // CORES DE ESTADO (SUCCESS, WARNING, ERROR, INFO)
-    // ========================================
-    success: '#4CAF50',            // Verde para sucesso
-    warning: '#FF9800',            // Laranja para avisos
-    error: '#F44336',              // Vermelho para erros
-    info: '#2196F3',               // Azul para informações
-    
-    // ========================================
-    // CORES DE GRADIENTE
-    // ========================================
-    gradientStart: currentTheme === 'dark' ? '#430065' : '#0a7ea4', // Início do gradiente
-    gradientEnd: currentTheme === 'dark' ? '#2a1b3d' : '#0d5a7a',   // Fim do gradiente
-    
-    // ========================================
-    // CORES DE TEXTO SECUNDÁRIO
-    // ========================================
-    textSecondary: currentTheme === 'dark' ? '#9BA1A6' : '#687076',   // Texto secundário
-    textTertiary: currentTheme === 'dark' ? '#6c757d' : '#adb5bd',    // Texto terciário
-    
-    // ========================================
-    // CORES DE OVERLAY
-    // ========================================
-    overlay: currentTheme === 'dark' ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.7)', // Overlay
-    
-    // ========================================
-    // CORES DE INPUT
-    // ========================================
-    inputBackground: currentTheme === 'dark' ? '#2a2a2a' : '#ffffff', // Fundo dos inputs
-    inputBorder: currentTheme === 'dark' ? '#444' : '#ddd',           // Borda dos inputs
-    
-    // ========================================
-    // CORES DE BOTÕES (USANDO CORES GLOBAIS)
-    // ========================================
-    buttonText: currentTheme === 'dark' ? '#fff' : '#fff',            // Cor do texto dos botões (branco para contraste)
+    isReady,                    // Indica se o tema já foi detectado e aplicado
+    currentTheme,               // Tema atual (light ou dark)
+    colors: Colors[currentTheme], // Cores do tema atual
+    headerBackground: '#430065',  // Cor fixa do header (roxo)
+    buttonPrimary: '#430065',     // Cor fixa do botão principal (roxo)
   };
 };

@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../constants/ThemeContext';
 
 export const ThemeToggle: React.FC = () => {
@@ -11,6 +11,11 @@ export const ThemeToggle: React.FC = () => {
     { key: 'dark' as const, label: 'Escuro', icon: 'moon' },
     { key: 'system' as const, label: 'Sistema', icon: 'settings' },
   ];
+
+  const handleThemeChange = async (newTheme: 'light' | 'dark' | 'system') => {
+    console.log('🎨 Mudando tema para:', newTheme);
+    await setTheme(newTheme);
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -26,7 +31,7 @@ export const ThemeToggle: React.FC = () => {
                 borderColor: colors.tint,
               },
             ]}
-            onPress={() => setTheme(themeOption.key)}
+            onPress={() => handleThemeChange(themeOption.key)}
           >
             <Ionicons
               name={themeOption.icon as any}

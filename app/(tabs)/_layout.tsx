@@ -1,11 +1,9 @@
 import { FontAwesome } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import { useTheme } from '../../constants/ThemeContext';
-import { useThemeColors } from '../../constants/useThemeColors';
 
 export default function TabsLayout() {
   const { colors } = useTheme();
-  const globalColors = useThemeColors();
 
   return (
     <Tabs screenOptions={{

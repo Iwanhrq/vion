@@ -3,12 +3,12 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { onAuthStateChanged } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
-import { auth } from '../firebaseConfig';
 import { ThemeProvider, useTheme } from '../constants/ThemeContext';
+import { auth } from '../firebaseConfig';
 
 function RootLayoutContent() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const { currentTheme } = useTheme();
+  const { currentTheme, colors } = useTheme();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -19,12 +19,16 @@ function RootLayoutContent() {
 
   return (
     <>
-      <StatusBar style={currentTheme === 'dark' ? 'light' : 'dark'} />
+      <StatusBar 
+        style={currentTheme === 'dark' ? 'light' : 'dark'} 
+        backgroundColor={colors.background}
+        translucent={false}
+      />
       <Stack 
         screenOptions={{ 
           headerShown: false,
           contentStyle: {
-            backgroundColor: currentTheme === 'dark' ? '#151718' : '#fff',
+            backgroundColor: colors.background,
           }
         }}
       >
