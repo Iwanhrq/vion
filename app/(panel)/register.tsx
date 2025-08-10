@@ -1,5 +1,4 @@
 import { Poppins_600SemiBold, useFonts } from '@expo-google-fonts/poppins';
-import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
@@ -9,12 +8,13 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
-  TouchableOpacity,
   View
 } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
+
 import { useTheme } from '../../constants/ThemeContext';
+
+// Componentes personalizados
+import { FormButton, Header, InputField, PasswordInput } from '../../components';
 
 // Firebase imports para autenticação e banco de dados
 import {
@@ -25,20 +25,7 @@ import {
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebaseConfig";
 
-// Componente SVG para a onda decorativa no topo da tela
-const Wave = ({ waveColor }: { waveColor: string }) => (
-  <Svg
-    viewBox="0 0 1440 320"
-    style={styles.wave} // Estilo com posição absoluta para posicionamento correto
-    preserveAspectRatio="none"
-  >
-    <Path
-      fill={waveColor}
-      fillOpacity="1"
-      d="M0,64L80,58.7C160,53,320,43,480,80C640,117,800,203,960,240C1120,277,1280,267,1360,261.3L1440,256L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"
-    />
-  </Svg>
-);
+
 
 export default function Register() {
   // Router para navegação entre telas
@@ -51,9 +38,7 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  // Estados para mostrar/ocultar senhas
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   // Estado para exibir mensagens de erro
   const [error, setError] = useState<string | null>(null);
 
@@ -151,16 +136,10 @@ export default function Register() {
           keyboardShouldPersistTaps="handled"
         >
           {/* Cabeçalho com botão de voltar e onda decorativa */}
-          <View style={[styles.header, { backgroundColor: colors.loginHeader }]}>
-            <TouchableOpacity onPress={() => router.push('/outset')} style={styles.backButton}>
-              <Ionicons
-                name="arrow-back"
-                size={40}
-                color='#fff'
-              />
-            </TouchableOpacity>
-            <Wave waveColor={colors.loginWave} />
-          </View>
+          <Header
+            onBackPress={() => router.push('/outset')}
+            waveColor={colors.loginWave}
+          />
 
           {/* Conteúdo principal */}
           <View style={styles.content}>
@@ -170,95 +149,48 @@ export default function Register() {
             <View style={styles.form}>
 
               {/* Campo Nome */}
-              <View style={[styles.inputContainer, { borderColor: colors.border }]}>
-
-                <TextInput
-                  style={[styles.input, { color: colors.text }]}
-                  placeholder="Nome"
-                  value={name}
-                  onChangeText={setName}
-                  autoCapitalize="words"
-                  placeholderTextColor={colors.placeholder}
-                />
-                <Ionicons
-                  name="person"
-                  size={18}
-                  color='#D0D0D0'
-                  style={styles.buttonIcons}
-                />
-              </View>
+              <InputField
+                placeholder="Nome"
+                value={name}
+                onChangeText={setName}
+                autoCapitalize="words"
+                icon="person"
+              />
 
               {/* Campo Email */}
-              <View style={[styles.inputContainer, { borderColor: colors.border }]}>
-
-                <TextInput
-                  style={[styles.input, { color: colors.text }]}
-                  placeholder="Email"
-                  value={email}
-                  onChangeText={setEmail}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  placeholderTextColor={colors.placeholder}
-                />
-                <Ionicons
-                  name="mail"
-                  size={18}
-                  color='#D0D0D0'
-                  style={styles.buttonIcons}
-                />
-              </View>
+              <InputField
+                placeholder="Email"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                icon="mail"
+              />
 
               {/* Campo Senha */}
-              <View style={[styles.inputContainer, { borderColor: colors.border }]}>
-                <TextInput
-                  style={[styles.input, { color: colors.text }]}
-                  placeholder="Senha"
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry={!showPassword}
-                  placeholderTextColor={colors.placeholder}
-                />
-                <TouchableOpacity
-                  onPress={() => setShowPassword(!showPassword)}
-                  style={styles.buttonIcons}
-                >
-                  <Ionicons
-                    name={showPassword ? "eye-off" : "eye"}
-                    size={20}
-                    color='#D0D0D0'
-                    />
-                </TouchableOpacity>
-              </View>
+              <PasswordInput
+                placeholder="Senha"
+                value={password}
+                onChangeText={setPassword}
+                containerStyle={{ marginBottom: 0 }}
+              />
 
               {/* Campo Confirmar Senha */}
-              <View style={[styles.inputContainer, { borderColor: colors.border }]}>
-                <TextInput
-                  style={[styles.input, { color: colors.text }]}
-                  placeholder="Confirmar senha"
-                  value={confirmPassword}
-                  onChangeText={setConfirmPassword}
-                  secureTextEntry={!showConfirmPassword}
-                  placeholderTextColor={colors.placeholder}
-                />
-                <TouchableOpacity
-                  onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-                  style={styles.buttonIcons}
-                >
-                  <Ionicons
-                    name={showConfirmPassword ? "eye-off" : "eye"}
-                    size={20}
-                    color='#D0D0D0'
-                    />
-                </TouchableOpacity>
-              </View>
+              <PasswordInput
+                placeholder="Confirmar senha"
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                containerStyle={{ marginBottom: 0 }}
+              />
 
               {/* Botão de cadastro */}
-              <TouchableOpacity
+              <FormButton
+                title="Cadastrar"
                 onPress={handleRegister}
-                style={[styles.buttonRegister, { backgroundColor: colors.buttonPrimary }]}
-              >
-                <Text style={[styles.textRegister, { color: colors.buttonText }]}>Cadastrar</Text>
-              </TouchableOpacity>
+                variant="primary"
+                size="large"
+                style={styles.buttonRegister}
+              />
 
               {/* Mensagem de erro, caso exista */}
               {error && <Text style={styles.errorText}>{error}</Text>}
@@ -299,28 +231,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  header: {
-    padding: 23,
-    height: 80,
-    position: "relative",
-  },
-  wave: {
-    position: "absolute",
-    bottom: -80,
-    left: 0,
-    right: 0,
-    width: "120%",
-    height: 80,
-    transform: [{ scaleX: -1 }],
-  },
-  backButton: {
-    zIndex: 1,
-    top: 30,
-  },
-  icon: {
-    width: 30,
-    height: 30,
-  },
   content: {
     paddingTop: 100,
     padding: 35,
@@ -339,22 +249,12 @@ const styles = StyleSheet.create({
     width: "90%",
     gap: 32,
   },
-  input: {
-    flex: 1,
-    height: 45,
-    fontSize: 16,
-    marginLeft: 0,
-  },
   buttonRegister: {
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 25,
     borderRadius: 20,
-  },
-  textRegister: {
-    fontWeight: '500',
-    fontSize: 16,
   },
   dividerContainer: {
     flexDirection: 'row',
@@ -386,24 +286,9 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
   },
-  inputContainer: {
-    padding: 15,
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 45,
-    borderWidth: 1,
-    borderRadius: 12,
-  },
-  buttonIcons: {
-    position: 'absolute',
-    right: 12,
-    zIndex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
+
   errorText: {
     color: '#F44336',
-    marginTop: 10,
     textAlign: 'center',
     fontSize: 14,
   }

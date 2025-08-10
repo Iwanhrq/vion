@@ -1,8 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
-import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { Alert, ScrollView, StyleSheet } from 'react-native';
 import { ThemeToggle } from '../../components/ThemeToggle';
 import { useTheme } from '../../constants/ThemeContext';
+
+// Componentes personalizados
+import { FormButton } from '../../components';
 
 export default function ProfileScreen() {
   const { colors, theme, setTheme } = useTheme();
@@ -22,14 +25,13 @@ export default function ProfileScreen() {
       <ThemeToggle />
       
       {/* Botão para resetar tema */}
-      <TouchableOpacity
-        style={[styles.clearButton, { backgroundColor: colors.buttonPrimary }]}
+      <FormButton
+        title="🧹 Limpar Tema Salvo"
         onPress={clearSavedTheme}
-      >
-        <Text style={[styles.clearButtonText, { color: colors.buttonText }]}>
-          🧹 Limpar Tema Salvo
-        </Text>
-      </TouchableOpacity>
+        variant="primary"
+        size="medium"
+        style={styles.clearButton}
+      />
     </ScrollView>
   );
 }

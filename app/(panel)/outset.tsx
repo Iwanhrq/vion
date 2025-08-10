@@ -1,6 +1,9 @@
+import { Poppins_500Medium, useFonts } from '@expo-google-fonts/poppins';
 import { useRouter } from 'expo-router';
-import { StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity } from 'react-native';
-import { useFonts, Poppins_500Medium } from '@expo-google-fonts/poppins';
+import { Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
+// Componentes personalizados
+import { FormButton } from '../../components';
 
 export default function Outset() {
   const router = useRouter();
@@ -41,20 +44,19 @@ export default function Outset() {
 
         {/* Botões de navegação para Login e Registro */}
         <View style={styles.buttons}>
-          <TouchableOpacity
-            style={styles.loginButton}
+          <FormButton
+            title="Faça Login"
             onPress={() => router.push('/login')}
-          >
-            <Text style={styles.loginText}>
-              Faça Login
-            </Text>
-          </TouchableOpacity>
+            variant="primary"
+            size="large"
+            style={styles.loginButton}
+          />
 
           <TouchableOpacity
-            style={styles.registerButton}
             onPress={() => router.push('/register')}
+            style={styles.registerButton}
           >
-            <Text style={styles.registerText}>
+            <Text style={styles.registerButtonText}>
               Ainda não tem uma conta? Cadastre-se
             </Text>
           </TouchableOpacity>
@@ -111,18 +113,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  loginText: {
-    fontSize: 15,
-    color: "#fff",
-    fontWeight: "500", // String para garantir compatibilidade no React Native
-  },
   registerButton: {
     paddingTop: 10,
     justifyContent: "center",
     alignItems: "center",
   },
-  registerText: {
-    fontSize: 13,
+  registerButtonText: {
     color: "#fff",
+    fontSize: 14,
+    textAlign: "center",
   },
 });

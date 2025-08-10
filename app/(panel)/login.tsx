@@ -1,5 +1,4 @@
 import { Poppins_600SemiBold, useFonts } from '@expo-google-fonts/poppins';
-import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
@@ -9,12 +8,14 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View
 } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
+
 import { useTheme } from '../../constants/ThemeContext';
+
+// Componentes personalizados
+import { FormButton, Header, InputField, PasswordInput } from '../../components';
 
 // Firebase imports
 import {
@@ -26,26 +27,12 @@ import {
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebaseConfig";
 
-// Componente SVG para animação da onda no cabeçalho
-const Wave = ({ waveColor }: { waveColor: string }) => (
-  <Svg
-    viewBox="0 0 1440 320"
-    style={styles.wave}
-    preserveAspectRatio="none"
-  >
-    <Path
-      fill={waveColor}
-      fillOpacity="1"
-      d="M0,64L80,58.7C160,53,320,43,480,80C640,117,800,203,960,240C1120,277,1280,267,1360,261.3L1440,256L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"
-    />
-  </Svg>
-);
+
 
 export default function Login() {
   // Estados para controlar os campos de email, senha e mensagens de erro
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
@@ -131,16 +118,10 @@ export default function Login() {
         >
 
           {/* Cabeçalho com botão de voltar e onda animada */}
-          <View style={[styles.header, { backgroundColor: colors.loginHeader }]}>
-            <TouchableOpacity onPress={() => router.push('/outset')} style={styles.backButton}>
-              <Ionicons
-                name="arrow-back"
-                size={40}
-                color='#fff'
-              />
-            </TouchableOpacity>
-            <Wave waveColor={colors.loginWave} />
-          </View>
+          <Header
+            onBackPress={() => router.push('/outset')}
+            waveColor={colors.loginWave}
+          />
 
           {/* Conteúdo principal da tela */}
           <View style={styles.content}>
@@ -150,48 +131,22 @@ export default function Login() {
             <View style={styles.form}>
 
               {/* Campo de Email */}
-              <View style={[styles.inputContainer, styles.emailContainer, { borderColor: colors.border }]}>
-
-                <TextInput
-                  style={[styles.input, { color: colors.text }]}
-                  placeholder="Email"
-                  value={email}
-                  onChangeText={setEmail}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  placeholderTextColor="#999999"
-                  autoCorrect={false}
-                  spellCheck={false}
-                />
-                <Ionicons
-                  name="mail"
-                  size={18}
-                  color='#D0D0D0'
-                  style={styles.buttonIcons}
-                />
-              </View>
+              <InputField
+                placeholder="Email"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                icon="mail"
+                containerStyle={{ marginBottom: 32 }}
+              />
 
               {/* Campo de Senha */}
-              <View style={[styles.inputContainer, { borderColor: colors.border }]}>
-                <TextInput
-                  style={[styles.input, { color: colors.text }]}
-                  placeholder="Senha"
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry={!showPassword}
-                  placeholderTextColor="#999999"
-                />
-                <TouchableOpacity
-                  onPress={() => setShowPassword(!showPassword)}
-                  style={styles.buttonIcons}
-                >
-                  <Ionicons
-                    name={showPassword ? "eye-off" : "eye"}
-                    size={20}
-                    color='#D0D0D0'
-                  />
-                </TouchableOpacity>
-              </View>
+              <PasswordInput
+                placeholder="Senha"
+                value={password}
+                onChangeText={setPassword}
+              />
 
               {/* Link Esqueci a senha alinhado à direita */}
               <View style={styles.forgotPasswordContainer}>
@@ -203,12 +158,13 @@ export default function Login() {
               </View>
 
               {/* Botão de Login */}
-              <TouchableOpacity
+              <FormButton
+                title="Login"
                 onPress={handleLogin}
-                style={[styles.buttonLogin, { backgroundColor: colors.buttonPrimary }]}
-              >
-                <Text style={[styles.textLogin, { color: colors.buttonText }]}>Login</Text>
-              </TouchableOpacity>
+                variant="primary"
+                size="large"
+                style={styles.buttonLogin}
+              />
 
               {/* Exibe mensagem de erro, se houver */}
               {error && <Text style={styles.errorText}>{error}</Text>}
@@ -250,28 +206,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  header: {
-    padding: 23,
-    height: 120,
-    position: "relative",
-  },
-  wave: {
-    position: "absolute",
-    bottom: -80,
-    left: 0,
-    right: 0,
-    width: "120%",
-    height: 80,
-    transform: [{ scaleX: -1 }],
-  },
-  backButton: {
-    zIndex: 1,
-    top: 30,
-  },
-  icon: {
-    width: 30,
-    height: 30,
-  },
+
   content: {
     paddingTop: 120,
     padding: 35,
@@ -286,27 +221,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   form: {
-    paddingTop: 60,
+    paddingTop: 40,
     width: "90%",
-  },
-  inputContainer: {
-    padding: 15,
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 45,
-    borderWidth: 1,
-    borderRadius: 12,
-  },
-  input: {
-    flex: 1,
-    height: 45,
-    fontSize: 16,
-    marginLeft: 0,
-  },
-  inputIcon: {
-    marginRight: 10,
-    width: 20,
-    height: 20,
   },
   buttonLogin: {
     height: 50,
@@ -315,32 +231,20 @@ const styles = StyleSheet.create({
     marginTop: 25,
     borderRadius: 20,
   },
-  textLogin: {
-    fontWeight: '500',
-    fontSize: 16,
-  },
   errorText: {
     color: '#F44336',
-    marginTop: 10,
+    marginTop: 32,
     textAlign: 'center',
     fontSize: 14,
   },
   forgotPasswordContainer: {
     alignItems: 'flex-end',
     marginBottom: 20,
-    marginTop: 5,
+    marginTop: -10,
   },
   forgotPasswordText: {
     fontSize: 14,
   },
-  emailContainer: {
-    marginBottom: 32,
-  },
-  buttonIcons: {
-    position: 'absolute',
-    right: 12,
-    zIndex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
+
+
 });

@@ -1,9 +1,13 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+
+import { useTheme } from '../../../constants/ThemeContext';
 
 export default function ForgotPasswordEmail() {
+  const { colors } = useTheme();
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Tela de Esqueci a senha - 1</Text>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text style={[styles.title, { color: colors.text }]}>Esqueci a senha</Text>
     </View>
   );
 }
@@ -11,13 +15,11 @@ export default function ForgotPasswordEmail() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121212', // Fundo escuro de exemplo
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
   },
-  text: {
-    color: '#fff',
-    fontSize: 20,
+  title: {
+    fontSize: 28,
     fontWeight: 'bold',
   },
 });
