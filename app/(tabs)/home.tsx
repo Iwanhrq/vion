@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 
 // Componentes nativos do React Native
 import {
-  Animated,
   Dimensions,
   Image,
   ScrollView,
@@ -30,14 +29,31 @@ const ROUTERS = [
 
 // Dados estáticos dos relatórios
 const REPORTS = [
-  { id: '1', title: 'Relatório Semanal', description: 'Análise do seu progresso', date: '15/12/2024', status: 'Concluído' },
-  { id: '2', title: 'Relatório Mensal', description: 'Resumo do mês de estudos', date: '01/12/2024', status: 'Em andamento' },
-  { id: '3', title: 'Relatório de Performance', description: 'Métricas de aprendizado', date: '10/12/2024', status: 'Pendente' },
-  { id: '4', title: 'Relatório de Conclusão', description: 'Módulos finalizados', date: '05/12/2024', status: 'Concluído' },
+  { 
+    id: '1', 
+    networkName: 'Rede Casa Principal', 
+    status: 'Segura', 
+    date: '15/12/2024', 
+    time: '14:30' 
+  },
+  { 
+    id: '2', 
+    networkName: 'Rede Escritório', 
+    status: 'Atenção', 
+    date: '14/12/2024', 
+    time: '09:15' 
+  },
+  { 
+    id: '3', 
+    networkName: 'Rede Café', 
+    status: 'Segura', 
+    date: '13/12/2024', 
+    time: '16:45' 
+  },
 ];
 
 // Dados estáticos das dicas
-const tips = [
+const TIPS = [
   { id: '1', name: 'Você sabe o que é WPS?', description: 'Facilita conexões no Wi-Fi, mas pode abrir brechas. Se não usa, desative.' },
   { id: '2', name: 'Você sabe o que é WPS?', description: 'Facilita conexões no Wi-Fi, mas pode abrir brechas. Se não usa, desative.' },
   { id: '3', name: 'Você sabe o que é WPS?', description: 'Facilita conexões no Wi-Fi, mas pode abrir brechas. Se não usa, desative.' },
@@ -46,10 +62,6 @@ const tips = [
 
 export default function Home() {
   const [error, setError] = useState<string | null>(null);
-  const [showHeader, setShowHeader] = useState(true);
-
-  const headerOpacity = new Animated.Value(1);
-  const headerHeight = new Animated.Value(250);
 
   const screenWidth = Dimensions.get('window').width;
 
@@ -65,60 +77,14 @@ export default function Home() {
     router.replace('/(panel)/login');
   };
 
-  // Anima o header conforme o scroll: oculta ou mostra
-  const handleScroll = (event: any) => {
-    const scrollY = event.nativeEvent.contentOffset.y;
-
-    if (scrollY > 100 && showHeader) {
-      setShowHeader(false);
-      Animated.parallel([
-        Animated.timing(headerOpacity, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: false,
-        }),
-        Animated.timing(headerHeight, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: false,
-        }),
-      ]).start();
-    } else if (scrollY <= 100 && !showHeader) {
-      setShowHeader(true);
-      Animated.parallel([
-        Animated.timing(headerOpacity, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: false,
-        }),
-        Animated.timing(headerHeight, {
-          toValue: 250,
-          duration: 300,
-          useNativeDriver: false,
-        }),
-      ]).start();
-    }
-  };
-
   return (
     <View style={[styles.container, { backgroundColor: globalColors.headerBackground }]}>
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
       >
-        {/* Header com animação */}
-        <Animated.View
-          style={[
-            styles.header,
-            {
-              backgroundColor: globalColors.headerBackground,
-              opacity: headerOpacity,
-              height: headerHeight,
-            },
-          ]}
-        >
+        {/* Header estático */}
+        <View style={styles.header}>
           <Image
             source={require('../../assets/images/fundoHeader.png')}
             style={styles.headerBackground}
@@ -129,7 +95,7 @@ export default function Home() {
             <Text style={styles.headerStatus}>Sua rede está segura</Text>
             <Text style={styles.headerAction}>Clique aqui para analisar a rede novamente</Text>
           </View>
-        </Animated.View>
+        </View>
 
         {/* Conteúdo principal */}
         <View style={[styles.content, { backgroundColor: colors.background }]}>
@@ -143,7 +109,7 @@ export default function Home() {
               contentContainerStyle={styles.routersScroll}
             >
               {ROUTERS.map((router_item) => (
-                <TouchableOpacity
+                <TouchableOpacity onPress={() => router.push('/router')}
                   key={router_item.id}
                   style={[styles.routerCard, { backgroundColor: colors.card }]}
                 >
@@ -167,14 +133,33 @@ export default function Home() {
             <Text style={[styles.sectionTitle, { color: colors.textTitle }]}>Histórico de relatórios</Text>
             <View style={styles.reportsContainer}>
               {REPORTS.map((report) => (
-                <TouchableOpacity
+                <TouchableOpacity 
+                  onPress={() => router.push('/relatories')}
                   key={report.id}
                   style={[styles.reportCard, { backgroundColor: colors.card }]}
                 >
-                  {/* Conteúdo do relatório pode ser adicionado aqui */}
+                  <View style={styles.reportLeft}>
+                    <Text style={[styles.reportName, { color: colors.textTitle }]}>{report.networkName}</Text>
+                                         <Text style={[styles.reportStatus, { color: colors.textSecondary }]}>
+                       Status: <Text style={{ 
+                         color: report.status === 'Segura' ? globalColors.statusSafe : 
+                                report.status === 'Atenção' ? globalColors.statusWarning : 
+                                globalColors.statusCritical 
+                       }}>{report.status}</Text>
+                     </Text>
+                  </View>
+                  <View style={styles.reportRight}>
+                    <Text style={[styles.reportDate, { color: colors.textSecondary }]}>{report.date}</Text>
+                    <Text style={[styles.reportTime, { color: colors.textSecondary }]}>{report.time}</Text>
+                  </View>
                 </TouchableOpacity>
               ))}
             </View>
+            <TouchableOpacity onPress={() => router.push('/relatories')}>
+              <Text style={[styles.showMoreRelatories, { color: colors.textTitle }]}>
+                Mostrar mais
+              </Text>
+            </TouchableOpacity>
           </View>
 
           {/* Linha divisória */}
@@ -188,7 +173,7 @@ export default function Home() {
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={styles.tipsScroll}
             >
-              {tips.map((tip) => (
+              {TIPS.map((tip) => (
                 <TouchableOpacity
                   key={tip.id}
                   style={[styles.tipCard, { backgroundColor: colors.card }]}
@@ -273,7 +258,7 @@ const styles = StyleSheet.create({
     height: 250,
   },
   sectionTitle: {
-    paddingLeft: 15,
+    paddingLeft: 5,
     paddingBottom: 10,
     fontSize: 20,
     fontWeight: 'bold',
@@ -316,15 +301,45 @@ const styles = StyleSheet.create({
   reports: {},
   reportsContainer: {},
   reportCard: {
-    height: 80,
+    height: 100,
     marginBottom: 12,
     padding: 15,
     borderRadius: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
+  },
+  showMoreRelatories: {
+    textAlign: "center",
+  },
+  reportName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 2,
+  },
+  reportStatus: {
+    fontSize: 13,
+    marginBottom: 0,
+  },
+  reportDate: {
+    fontSize: 12,
+    marginBottom: 2,
+  },
+  reportLeft: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  reportRight: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  reportTime: {
+    fontSize: 12,
+    marginBottom: 0,
   },
 
   // Seção Dicas

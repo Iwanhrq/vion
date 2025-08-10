@@ -1,16 +1,9 @@
-import {SafeAreaView, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View, Text, TextInput } from 'react-native'
+import { View } from 'react-native'
 
-export default function ForgotPasswordReset(){
-    return(
-        <SafeAreaView style={styles.container}>
-
-        </SafeAreaView>
+export default function ForgotPasswordReset() {
+    return (
+        <View>
+            
+        </View>
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#000"
-    }
-})

@@ -1,8 +1,8 @@
 import { Poppins_600SemiBold, useFonts } from '@expo-google-fonts/poppins';
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
-  Image,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
@@ -45,10 +45,12 @@ export default function Login() {
   // Estados para controlar os campos de email, senha e mensagens de erro
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
   const { colors } = useTheme();
+
 
   // Carregamento da fonte customizada Poppins
   const [fontsLoaded] = useFonts({
@@ -131,9 +133,10 @@ export default function Login() {
           {/* Cabeçalho com botão de voltar e onda animada */}
           <View style={[styles.header, { backgroundColor: colors.loginHeader }]}>
             <TouchableOpacity onPress={() => router.push('/outset')} style={styles.backButton}>
-              <Image
-                source={require('../../assets/images/seta.png')}
-                style={styles.icon}
+              <Ionicons
+                name="arrow-back"
+                size={40}
+                color='#fff'
               />
             </TouchableOpacity>
             <Wave waveColor={colors.loginWave} />
@@ -147,7 +150,8 @@ export default function Login() {
             <View style={styles.form}>
 
               {/* Campo de Email */}
-              <View style={[styles.inputContainer, { borderBottomColor: colors.border }]}>
+              <View style={[styles.inputContainer, styles.emailContainer, { borderColor: colors.border }]}>
+
                 <TextInput
                   style={[styles.input, { color: colors.text }]}
                   placeholder="Email"
@@ -155,28 +159,47 @@ export default function Login() {
                   onChangeText={setEmail}
                   keyboardType="email-address"
                   autoCapitalize="none"
-                  placeholderTextColor={colors.placeholder}
+                  placeholderTextColor="#999999"
+                  autoCorrect={false}
+                  spellCheck={false}
                 />
-                <Image
-                  source={require('../../assets/images/mail.png')}
-                  style={styles.inputIcon}
+                <Ionicons
+                  name="mail"
+                  size={18}
+                  color='#D0D0D0'
+                  style={styles.buttonIcons}
                 />
               </View>
 
               {/* Campo de Senha */}
-              <View style={[styles.inputContainer, { borderBottomColor: colors.border }]}>
+              <View style={[styles.inputContainer, { borderColor: colors.border }]}>
                 <TextInput
                   style={[styles.input, { color: colors.text }]}
                   placeholder="Senha"
                   value={password}
                   onChangeText={setPassword}
-                  secureTextEntry
-                  placeholderTextColor={colors.placeholder}
+                  secureTextEntry={!showPassword}
+                  placeholderTextColor="#999999"
                 />
-                <Image
-                  source={require('../../assets/images/password.png')}
-                  style={styles.inputIcon}
-                />
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showPassword)}
+                  style={styles.buttonIcons}
+                >
+                  <Ionicons
+                    name={showPassword ? "eye-off" : "eye"}
+                    size={20}
+                    color='#D0D0D0'
+                  />
+                </TouchableOpacity>
+              </View>
+
+              {/* Link Esqueci a senha alinhado à direita */}
+              <View style={styles.forgotPasswordContainer}>
+                <TouchableOpacity onPress={() => router.push('/(panel)/ForgotPassword/ForgotPasswordEmail')}>
+                  <Text style={[styles.forgotPasswordText, { color: colors.textSecondary }]}>
+                    Esqueceu a senha?
+                  </Text>
+                </TouchableOpacity>
               </View>
 
               {/* Botão de Login */}
@@ -256,7 +279,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
-    fontWeight: '600', // ajustado para ser válido
     paddingLeft: 10,
     fontFamily: "Poppins_600SemiBold",
   },
@@ -266,22 +288,25 @@ const styles = StyleSheet.create({
   form: {
     paddingTop: 60,
     width: "90%",
-    gap: 32,
   },
   inputContainer: {
+    padding: 15,
     flexDirection: 'row',
     alignItems: 'center',
     height: 45,
-    borderBottomWidth: 1,
+    borderWidth: 1,
+    borderRadius: 12,
   },
   input: {
     flex: 1,
+    height: 45,
     fontSize: 16,
+    marginLeft: 0,
   },
   inputIcon: {
-    width: 16,
-    height: 16,
-    marginLeft: 10,
+    marginRight: 10,
+    width: 20,
+    height: 20,
   },
   buttonLogin: {
     height: 50,
@@ -291,7 +316,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   textLogin: {
-    fontWeight: 'bold',
+    fontWeight: '500',
     fontSize: 16,
   },
   errorText: {
@@ -299,5 +324,23 @@ const styles = StyleSheet.create({
     marginTop: 10,
     textAlign: 'center',
     fontSize: 14,
-  }
+  },
+  forgotPasswordContainer: {
+    alignItems: 'flex-end',
+    marginBottom: 20,
+    marginTop: 5,
+  },
+  forgotPasswordText: {
+    fontSize: 14,
+  },
+  emailContainer: {
+    marginBottom: 32,
+  },
+  buttonIcons: {
+    position: 'absolute',
+    right: 12,
+    zIndex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });

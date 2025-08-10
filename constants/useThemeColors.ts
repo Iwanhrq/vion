@@ -43,5 +43,10 @@ export const useThemeColors = () => {
     colors: Colors[currentTheme], // Cores do tema atual
     headerBackground: '#430065',  // Cor fixa do header (roxo)
     buttonPrimary: '#430065',     // Cor fixa do botão principal (roxo)
+    
+    // Cores para status das redes
+    statusSafe: '#4CAF50',          // Verde para rede segura
+    statusWarning: '#FFC107',       // Amarelo para rede com atenção
+    statusCritical: '#F44336',      // Vermelho para rede crítica
   };
 };

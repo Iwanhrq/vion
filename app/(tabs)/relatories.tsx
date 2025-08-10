@@ -1,9 +1,9 @@
 import { View, Text, StyleSheet } from 'react-native';
 
-export default function ForgotPasswordEmail() {
+export default function Relatories() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Tela de Esqueci a senha - 1</Text>
+      <Text style={styles.text}>Tela de Relatório</Text>
     </View>
   );
 }

@@ -15,7 +15,7 @@ export default function TabsLayout() {
       },
 
       headerTintColor: '#fff',
-      headerShown: false, 
+      headerShown: false,
       tabBarShowLabel: false,
     }}>
       <Tabs.Screen
@@ -26,12 +26,27 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="router"
+        options={{
+          title: 'Roteadores',
+          tabBarIcon: ({ color }) => <FontAwesome name="wifi" size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="relatories"
+        options={{
+          title: 'Relatórios',
+          tabBarIcon: ({ color }) => <FontAwesome name="file" size={20} color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="profile"
         options={{
           title: 'Perfil',
           tabBarIcon: ({ color }) => <FontAwesome name="user" size={24} color={color} />,
         }}
       />
+
     </Tabs>
   );
 } 

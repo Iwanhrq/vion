@@ -6,6 +6,11 @@ export const GlobalColors = {
   headerBackground: '#430065',    // Fundo dos headers (roxo)
   buttonPrimary: '#430065',       // Botões primários (roxo)
   buttonSecondary: '#EB3C7D',     // Botões secundários (rosa)
+  
+  // Cores para status das redes
+  statusSafe: '#4CAF50',          // Verde para rede segura
+  statusWarning: '#FFC107',       // Amarelo para rede com atenção
+  statusCritical: '#F44336',      // Vermelho para rede crítica
 };
 
 export const Colors = {
@@ -49,7 +54,7 @@ export const Colors = {
   },
 
   dark: {
-    textTitle: '#fff',             // Títulos (branco)
+    textTitle: '#CC66FF',             // Títulos (branco)
     text: '#fff',                  // Texto principal (branco)
     background: '#000',            // Fundo geral (preto)
     tint: tintColorDark,           // Destaques (branco)

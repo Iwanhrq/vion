@@ -1,28 +1,22 @@
 import { Stack } from "expo-router"
 
-export default function PanelLayout() {
+export default function ForgotPasswordLayout() {
     return (
         <Stack>
             <Stack.Screen
-                name="outset"
+                name="ForgotPasswordEmail"
                 options={{
                     headerShown: false,
                 }}
             />
             <Stack.Screen
-                name="login"
+                name="ForgotPasswordCode"
                 options={{
                     headerShown: false,
                 }}
             />
             <Stack.Screen
-                name="register"
-                options={{
-                    headerShown: false,
-                }}
-            />
-            <Stack.Screen
-                name="ForgotPassword"
+                name="ForgotPasswordReset"
                 options={{
                     headerShown: false,
                 }}
