@@ -18,3 +18,10 @@ export { NetworkStatusHeader } from './NetworkStatusHeader';
 
 // Componentes existentes
 export { ThemeToggle } from './ThemeToggle';
+
+// Componentes ForgotPassword
+export { default as ForgotPasswordHeader } from './ForgotPasswordHeader';
+export { default as ForgotPasswordInput } from './ForgotPasswordInput';
+export { default as ForgotPasswordButton } from './ForgotPasswordButton';
+export { default as ForgotPasswordCodeInputs } from './ForgotPasswordCodeInputs';
+export { default as ForgotPasswordTimer } from './ForgotPasswordTimer';
