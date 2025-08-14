@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { Appearance } from 'react-native';
-import { Colors } from './Colors';
+import { Colors, GlobalColors } from './Colors';
 
 export const useThemeColors = () => {
   const [isReady, setIsReady] = useState(false);                  // Indica quando o tema inicial foi detectado
@@ -41,12 +41,6 @@ export const useThemeColors = () => {
     isReady,                    // Indica se o tema já foi detectado e aplicado
     currentTheme,               // Tema atual (light ou dark)
     colors: Colors[currentTheme], // Cores do tema atual
-    headerBackground: '#430065',  // Cor fixa do header (roxo)
-    buttonPrimary: '#430065',     // Cor fixa do botão principal (roxo)
-    
-    // Cores para status das redes
-    statusSafe: '#4CAF50',          // Verde para rede segura
-    statusWarning: '#FFC107',       // Amarelo para rede com atenção
-    statusCritical: '#F44336',      // Vermelho para rede crítica
+    ...GlobalColors,            // Inclui todas as cores globais
   };
 };

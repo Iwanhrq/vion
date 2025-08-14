@@ -51,7 +51,7 @@ export const Header: React.FC<HeaderProps> = ({
 const styles = StyleSheet.create({
   header: {
     padding: 23,
-    height: 120,
+    height: 160,
     position: "relative",
   },
   wave: {

@@ -22,9 +22,9 @@ export const NetworkStatusHeader: React.FC<NetworkStatusHeaderProps> = ({
         resizeMode="contain"
       />
       <View style={styles.headerTextContainer}>
-        <Text style={styles.headerPercentage}>{percentage}</Text>
-        <Text style={styles.headerStatus}>{status}</Text>
-        <Text style={styles.headerAction}>{action}</Text>
+        {percentage && <Text style={styles.headerPercentage}>{percentage}</Text>}
+        <Text style={styles.headerStatus} numberOfLines={2}>{status}</Text>
+        <Text style={styles.headerAction} numberOfLines={2}>{action}</Text>
       </View>
     </View>
   );
@@ -61,15 +61,21 @@ const styles = StyleSheet.create({
   },
   headerStatus: {
     color: '#fff',
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: '500',
     marginBottom: 12,
     textAlign: 'center',
+    lineHeight: 28,
+    maxWidth: 280,
+    paddingHorizontal: 20,
+    paddingTop: 10
   },
   headerAction: {
     color: '#fff',
     fontSize: 12,
     textAlign: 'center',
     opacity: 0.8,
+    lineHeight: 16,
+    paddingHorizontal: 90,
   },
 });

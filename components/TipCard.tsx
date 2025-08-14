@@ -31,7 +31,7 @@ export const TipCard: React.FC<TipCardProps> = ({
         <Text style={[styles.tipTitle, { color: colors.textTitle }]}>{name}</Text>
         <Text style={[styles.tipText, { color: colors.textSecondary }]}>{description}</Text>
         <TouchableOpacity style={[styles.buttonTip, { backgroundColor: colors.buttonSecondary }]}>
-          <Text style={[styles.buttonTipText, { color: colors.buttonText }]}>Conhecer</Text>
+          <Text style={[styles.buttonTipText, { color: colors.buttonTertiaryText }]}>Conhecer</Text>
         </TouchableOpacity>
       </View>
     </TouchableOpacity>

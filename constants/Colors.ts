@@ -45,12 +45,15 @@ export const Colors = {
     buttonPrimary: GlobalColors.buttonPrimary,     // Botão primário (roxo)
     buttonSecondary: GlobalColors.buttonSecondary, // Botão secundário (rosa)
     buttonSecondaryText: '#fff',   // Texto do botão secundário (branco)
+    buttonTertiaryText: '#fff',    // Texto do botão terciário (branco)
     buttonText: '#fff',            // Texto dos botões primários (branco)
 
     // ===== CORES DE ÍCONES E TABS =====
     icon: '#687076',               // Ícones (cinza médio)
     tabIconDefault: '#687076',     // Ícone tab não selecionado (cinza)
     tabIconSelected: tintColorLight, // Ícone tab selecionado (roxo)
+    tabBorder: '#D7D7D7',          // Borda das tabs (cinza claro)
+    divider: '#D7D7D7',            // Divisões das seções (cinza claro)
 
     // ===== CORES DE DESTAQUE =====
     tint: tintColorLight,          // Destaques e links (roxo)
@@ -95,12 +98,15 @@ export const Colors = {
     buttonPrimary: GlobalColors.buttonPrimary,     // Botão primário (roxo)
     buttonSecondary: '#fff',       // Botão secundário (branco)
     buttonSecondaryText: '#000',   // Texto do botão secundário (preto)
+    buttonTertiaryText: '#fff',    // Texto do botão terciário (branco)
     buttonText: '#fff',            // Texto dos botões primários (branco)
 
     // ===== CORES DE ÍCONES E TABS =====
     icon: '#9BA1A6',               // Ícones (cinza claro)
     tabIconDefault: '#9BA1A6',     // Ícone tab não selecionado (cinza claro)
     tabIconSelected: tintColorDark, // Ícone tab selecionado (branco)
+    tabBorder: '#333333',          // Borda das tabs (cinza escuro)
+    divider: '#333333',            // Divisões das seções (cinza escuro)
 
     // ===== CORES DE DESTAQUE =====
     tint: tintColorDark,           // Destaques (branco)

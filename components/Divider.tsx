@@ -10,7 +10,7 @@ export const Divider: React.FC<DividerProps> = ({ style }) => {
   const { colors } = useTheme();
 
   return (
-    <View style={[styles.divider, { backgroundColor: colors.border }, style]} />
+    <View style={[styles.divider, { backgroundColor: colors.divider }, style]} />
   );
 };
 

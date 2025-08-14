@@ -3,6 +3,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { onAuthStateChanged } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
+import { RouterProvider } from '../constants/RouterContext';
 import { ThemeProvider, useTheme } from '../constants/ThemeContext';
 import { auth } from '../firebaseConfig';
 
@@ -45,7 +46,9 @@ function RootLayoutContent() {
 export default function RootLayout() {
   return (
     <ThemeProvider>
-      <RootLayoutContent />
+      <RouterProvider>
+        <RootLayoutContent />
+      </RouterProvider>
     </ThemeProvider>
   );
 }
