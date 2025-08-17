@@ -18,6 +18,7 @@ export { TipCard } from './TipCard';
 export { NetworkStatusHeader } from './NetworkStatusHeader';
 
 // Componentes existentes
+export { ThemeDebug } from './ThemeDebug';
 export { ThemeToggle } from './ThemeToggle';
 
 // Componentes ForgotPassword

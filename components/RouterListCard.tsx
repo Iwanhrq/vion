@@ -1,7 +1,6 @@
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../constants/ThemeContext';
-import { useThemeColors } from '../constants/useThemeColors';
 
 interface RouterListCardProps {
   id: string;
@@ -20,16 +19,15 @@ export const RouterListCard: React.FC<RouterListCardProps> = ({
   onFixPress
 }) => {
   const { colors } = useTheme();
-  const globalColors = useThemeColors();
 
   const getStatusColor = () => {
     switch (status) {
       case 'Seguro':
-        return '#4CAF50';
+        return colors.success;
       case 'Atenção':
-        return '#FF9800';
+        return colors.warning;
       case 'Crítico':
-        return '#F44336';
+        return colors.error;
       default:
         return colors.textSecondary;
     }
@@ -64,10 +62,10 @@ export const RouterListCard: React.FC<RouterListCardProps> = ({
         </View>
         
         <TouchableOpacity
-          style={[styles.fixButton, { backgroundColor: globalColors.buttonSecondary }]}
+          style={[styles.fixButton, { backgroundColor: colors.buttonSecondary }]}
           onPress={onFixPress}
         >
-          <Text style={styles.fixButtonText}>Corrigir</Text>
+          <Text style={[styles.fixButtonText, { color: colors.buttonSecondaryText }]}>Corrigir</Text>
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
@@ -135,7 +133,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   fixButtonText: {
-    color: '#fff',
     fontSize: 12,
     fontWeight: '600',
   },

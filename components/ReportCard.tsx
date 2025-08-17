@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../constants/ThemeContext';
-import { useThemeColors } from '../constants/useThemeColors';
 
 interface ReportCardProps {
   id: string;
@@ -22,16 +21,15 @@ export const ReportCard: React.FC<ReportCardProps> = ({
   style
 }) => {
   const { colors } = useTheme();
-  const globalColors = useThemeColors();
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'Segura':
-        return globalColors.statusSafe;
+        return colors.success;
       case 'Atenção':
-        return globalColors.statusWarning;
+        return colors.warning;
       default:
-        return globalColors.statusCritical;
+        return colors.error;
     }
   };
 

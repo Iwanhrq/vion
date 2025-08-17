@@ -5,12 +5,10 @@ import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Header, RouterListCard } from '../../components';
 import { useRouterContext } from '../../constants/RouterContext';
 import { useTheme } from '../../constants/ThemeContext';
-import { useThemeColors } from '../../constants/useThemeColors';
 
 export default function Router() {
   const router = useRouter();
   const { colors } = useTheme();
-  const globalColors = useThemeColors();
   const { routers } = useRouterContext();
 
   const handleRouterPress = (routerId: string) => {
@@ -38,7 +36,7 @@ export default function Router() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: globalColors.headerBackground }]}>
+    <View style={[styles.container, { backgroundColor: colors.loginHeader }]}>
       <Header onBackPress={() => router.push('/(tabs)/home' as any)} showWave={false}/>
 
       <View style={[styles.content, { backgroundColor: colors.background }]}>

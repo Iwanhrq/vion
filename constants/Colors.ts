@@ -11,8 +11,7 @@ export const GlobalColors = {
   // Cores principais da marca
   headerBackground: '#430065',    // Fundo dos headers (roxo)
   buttonPrimary: '#430065',       // Botões primários (roxo)
-  buttonSecondary: '#EB3C7D',     // Botões secundários (rosa)
-  
+  buttonTertiary: '#EB3C7D',     // Botões terciários (rosa)
   // Cores para status das redes
   statusSafe: '#4CAF50',          // Verde para rede segura
   statusWarning: '#FFC107',       // Amarelo para rede com atenção
@@ -37,14 +36,15 @@ export const Colors = {
     overlay: 'rgba(255,255,255,0.7)', // Overlay branco translúcido
 
     // ===== CORES DE BORDAS E INPUTS =====
-    border: '#e0e0e0',             // Bordas (cinza claro)
+    border: '#272727',             // Bordas (cinza claro)
     inputBackground: '#ffffff',    // Fundo inputs (branco)
     inputBorder: '#ddd',           // Borda inputs (cinza claro)
 
     // ===== CORES DE BOTÕES =====
     buttonPrimary: GlobalColors.buttonPrimary,     // Botão primário (roxo)
-    buttonSecondary: GlobalColors.buttonSecondary, // Botão secundário (rosa)
+    buttonSecondary: '#EB3C7D', // Botão secundário (rosa)
     buttonSecondaryText: '#fff',   // Texto do botão secundário (branco)
+    buttonTertiary: GlobalColors.buttonTertiary,   // Botão terciário (rosa)
     buttonTertiaryText: '#fff',    // Texto do botão terciário (branco)
     buttonText: '#fff',            // Texto dos botões primários (branco)
 
@@ -96,8 +96,9 @@ export const Colors = {
 
     // ===== CORES DE BOTÕES =====
     buttonPrimary: GlobalColors.buttonPrimary,     // Botão primário (roxo)
-    buttonSecondary: '#fff',       // Botão secundário (branco)
-    buttonSecondaryText: '#000',   // Texto do botão secundário (preto)
+    buttonSecondary: GlobalColors.buttonTertiary, // Botão secundário (rosa)
+    buttonSecondaryText: '#fff',   // Texto do botão secundário (branco)
+    buttonTertiary: GlobalColors.buttonTertiary,   // Botão terciário (rosa)
     buttonTertiaryText: '#fff',    // Texto do botão terciário (branco)
     buttonText: '#fff',            // Texto dos botões primários (branco)
 

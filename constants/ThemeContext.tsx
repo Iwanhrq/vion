@@ -14,6 +14,7 @@ interface ThemeContextType {
   currentTheme: 'light' | 'dark'; // Tema aplicado (após resolução de 'system')
   setTheme: (theme: Theme) => void; // Função para alterar tema
   colors: typeof Colors.light;     // Cores do tema aplicado
+  resetToSystem: () => Promise<void>; // Função para resetar para tema do sistema
 }
 
 // CRIAÇÃO DO CONTEXTO
@@ -39,41 +40,42 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         const colorScheme = Appearance.getColorScheme();
         const detectedTheme = colorScheme === 'dark' ? 'dark' : 'light';
         setSystemTheme(detectedTheme);
-        // Aplica tema do sistema imediatamente se usuário escolheu 'system'
-        if (theme === 'system') {
-          // opcional: log para debug
-          console.log('Aplicando tema do sistema:', detectedTheme);
-        }
-      } catch {
+        console.log('🎨 Tema do sistema detectado:', detectedTheme);
+      } catch (error) {
+        console.log('Erro ao detectar tema do sistema:', error);
         setSystemTheme('light'); // fallback para claro em erro
       }
     };
 
+    // Detecta tema do sistema imediatamente
     detectSystemTheme();
 
     // Listener para mudanças no tema do sistema em tempo real
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
       const newSystemTheme = colorScheme === 'dark' ? 'dark' : 'light';
       setSystemTheme(newSystemTheme);
-      if (theme === 'system') {
-        // opcional: log para debug
-        console.log('Tema do sistema mudou para:', newSystemTheme);
-      }
+      console.log('🎨 Tema do sistema mudou para:', newSystemTheme);
     });
 
     // Cleanup do listener
     return () => subscription?.remove();
-  }, [theme]);
+  }, []);
 
   // Carrega preferência de tema salva no AsyncStorage
   useEffect(() => {
     const loadSavedTheme = async () => {
       try {
         const savedTheme = await AsyncStorage.getItem('userTheme');
-        if (savedTheme) setThemeState(savedTheme as Theme);
-        else setThemeState('system'); // padrão
-      } catch {
-        setThemeState('system'); // fallback
+        if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark' || savedTheme === 'system')) {
+          setThemeState(savedTheme as Theme);
+        } else {
+          // Se não há tema salvo ou é inválido, define como 'system' e limpa o storage
+          await AsyncStorage.removeItem('userTheme');
+          setThemeState('system');
+        }
+      } catch (error) {
+        console.log('Erro ao carregar tema:', error);
+        setThemeState('system'); // fallback para sistema
       }
     };
     loadSavedTheme();
@@ -84,8 +86,20 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     try {
       await AsyncStorage.setItem('userTheme', newTheme);
       setThemeState(newTheme);
+      console.log('🎨 Tema salvo:', newTheme);
     } catch (error) {
       console.log('Erro ao salvar tema:', error);
+    }
+  };
+
+  // Função para resetar para tema do sistema
+  const resetToSystem = async () => {
+    try {
+      await AsyncStorage.removeItem('userTheme');
+      setThemeState('system');
+      console.log('🎨 Resetado para tema do sistema');
+    } catch (error) {
+      console.log('Erro ao resetar tema:', error);
     }
   };
 
@@ -95,12 +109,22 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   // Cores do tema atual
   const colors = Colors[currentTheme];
 
+  // Log para debug do tema aplicado
+  useEffect(() => {
+    console.log('🎨 Tema aplicado:', {
+      userChoice: theme,
+      systemTheme: systemTheme,
+      currentTheme: currentTheme
+    });
+  }, [theme, systemTheme, currentTheme]);
+
   // Valor que será fornecido pelo contexto
   const value: ThemeContextType = {
     theme,
     currentTheme,
     setTheme,
     colors,
+    resetToSystem,
   };
 
   return (

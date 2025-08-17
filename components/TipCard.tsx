@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../constants/ThemeContext';
-import { useThemeColors } from '../constants/useThemeColors';
 
 interface TipCardProps {
   id: string;
@@ -18,7 +17,6 @@ export const TipCard: React.FC<TipCardProps> = ({
   style
 }) => {
   const { colors } = useTheme();
-  const globalColors = useThemeColors();
 
   return (
     <TouchableOpacity
@@ -26,11 +24,11 @@ export const TipCard: React.FC<TipCardProps> = ({
       onPress={onPress}
       disabled={!onPress}
     >
-      <View style={[styles.tipImageContainer, { backgroundColor: globalColors.buttonPrimary }]} />
+      <View style={[styles.tipImageContainer, { backgroundColor: colors.buttonPrimary }]} />
       <View style={styles.tipInfo}>
         <Text style={[styles.tipTitle, { color: colors.textTitle }]}>{name}</Text>
         <Text style={[styles.tipText, { color: colors.textSecondary }]}>{description}</Text>
-        <TouchableOpacity style={[styles.buttonTip, { backgroundColor: colors.buttonSecondary }]}>
+        <TouchableOpacity style={[styles.buttonTip, { backgroundColor: colors.buttonTertiary }]}>
           <Text style={[styles.buttonTipText, { color: colors.buttonTertiaryText }]}>Conhecer</Text>
         </TouchableOpacity>
       </View>
@@ -42,7 +40,7 @@ const styles = StyleSheet.create({
   tipCard: {
     width: 200,
     marginRight: 15,
-    marginBottom: 16,
+    marginBottom: 60,
     borderRadius: 15,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },

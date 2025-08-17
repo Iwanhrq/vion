@@ -1,17 +1,15 @@
 import { useRouter } from 'expo-router';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Header } from '../../components';
 import { useTheme } from '../../constants/ThemeContext';
-import { useThemeColors } from '../../constants/useThemeColors';
 
 export default function Relatories() {
   const router = useRouter();
   const { colors } = useTheme();
-  const globalColors = useThemeColors();
 
   return (
-    <View style={[styles.container, { backgroundColor: globalColors.headerBackground }]}>
+    <View style={[styles.container, { backgroundColor: colors.loginHeader }]}>
       <Header onBackPress={() => router.push('/(tabs)/home' as any)} showWave={false}/>
 
       <View style={[styles.content, { backgroundColor: colors.background }]}>

@@ -10,11 +10,18 @@ export default function TabsLayout() {
       tabBarActiveTintColor: colors.tabIconSelected,
       tabBarInactiveTintColor: colors.tabIconDefault,
       tabBarStyle: {
+        position: 'absolute',
+        left: 20,
+        right: 20,
+        height: 60,
         backgroundColor: colors.background,
-        borderTopColor: colors.tabBorder,
+        borderTopWidth: 0, // remove borda
+        elevation: 5, // sombra no Android
+        shadowColor: '#000', // sombra no iOS
+        shadowOpacity: 0.1,
+        shadowOffset: { width: 0, height: 5 },
+        shadowRadius: 5,
       },
-
-      headerTintColor: '#fff',
       headerShown: false,
       tabBarShowLabel: false,
     }}>

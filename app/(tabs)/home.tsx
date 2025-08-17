@@ -20,7 +20,6 @@ import {
 // Temas personalizados
 import { useRouterContext } from '../../constants/RouterContext';
 import { useTheme } from '../../constants/ThemeContext';
-import { useThemeColors } from '../../constants/useThemeColors';
 
 // Componentes personalizados
 import {
@@ -96,7 +95,6 @@ export default function Home() {
 
   const router = useRouter();
   const { colors } = useTheme();
-  const globalColors = useThemeColors();
 
   // Determina se deve mostrar estado com dados ou vazio
   const hasData = (ROUTERS.length > 0 || routers.length > 0) && REPORTS.length > 0;
@@ -137,7 +135,7 @@ export default function Home() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: globalColors.headerBackground }]}>
+    <View style={[styles.container, { backgroundColor: colors.loginHeader }]}>
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
@@ -285,7 +283,7 @@ export default function Home() {
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: colors.background }]}>
             <Text style={[styles.modalTitle, { color: colors.textTitle }]}>
-              Adicionar Roteador
+              Adicionar roteador
             </Text>
 
             <Text style={[styles.modalDescription, { color: colors.textSecondary }]}>
@@ -296,6 +294,7 @@ export default function Home() {
               style={[styles.modalInput, {
                 backgroundColor: colors.card,
                 color: colors.text,
+                borderColor: colors.border,
               }]}
               placeholder="Nome do roteador"
               placeholderTextColor={colors.textSecondary}
@@ -307,6 +306,7 @@ export default function Home() {
               style={[styles.modalInput, {
                 backgroundColor: colors.card,
                 color: colors.text,
+                borderColor: colors.border,
               }]}
               placeholder="Descrição (opcional)"
               placeholderTextColor={colors.textSecondary}
@@ -317,7 +317,7 @@ export default function Home() {
 
             <View style={styles.modalButtons}>
               <TouchableOpacity
-                style={[styles.modalButton, { backgroundColor: globalColors.buttonSecondary }]}
+                style={[styles.modalButton, { backgroundColor: colors.buttonTertiary }]}
                 onPress={handleCancelAddRouter}
               >
                 <Text style={[styles.modalButtonText, { color: '#fff' }]}>
@@ -326,7 +326,7 @@ export default function Home() {
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={[styles.modalButton, { backgroundColor: globalColors.buttonPrimary }]}
+                style={[styles.modalButton, { backgroundColor: colors.buttonPrimary }]}
                 onPress={handleAddRouter}
               >
                 <Text style={[styles.modalButtonText, { color: '#fff' }]}>
@@ -352,6 +352,7 @@ const styles = StyleSheet.create({
 
   content: {
     padding: 20,
+    paddingTop: 22,
     paddingBottom: 40,
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
