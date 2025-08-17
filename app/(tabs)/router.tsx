@@ -12,7 +12,7 @@ export default function Router() {
   const { routers } = useRouterContext();
 
   const handleRouterPress = (routerId: string) => {
-    router.push('/(router)/routerDetails');
+    router.push(`/(router)/routerDetails?id=${routerId}`);
   };
 
   const handleFixPress = (routerId: string, routerName: string) => {

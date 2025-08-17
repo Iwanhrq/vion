@@ -55,20 +55,19 @@ const styles = StyleSheet.create({
   },
   headerPercentage: {
     color: '#fff',
-    fontSize: 48,
+    fontSize: 40,
     fontWeight: 'bold',
-    marginBottom: 8,
   },
   headerStatus: {
     color: '#fff',
     fontSize: 22,
     fontWeight: '500',
-    marginBottom: 12,
+    marginBottom: 10,
     textAlign: 'center',
     lineHeight: 28,
     maxWidth: 280,
     paddingHorizontal: 20,
-    paddingTop: 10
+    paddingTop: 8
   },
   headerAction: {
     color: '#fff',

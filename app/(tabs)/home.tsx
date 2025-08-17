@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 // Componentes nativos do React Native
 import {
   Alert,
+  Animated,
   Dimensions,
   Modal,
   ScrollView,
@@ -25,7 +26,6 @@ import { useTheme } from '../../constants/ThemeContext';
 import {
   Divider,
   NetworkStatusHeader,
-  ReportCard,
   RouterCard,
   SectionTitle,
   TipCard
@@ -87,9 +87,15 @@ const TIPS = [
 export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [loadingModalVisible, setLoadingModalVisible] = useState(false);
   const [routerName, setRouterName] = useState('');
   const [routerDescription, setRouterDescription] = useState('');
+  const [loadingStatus, setLoadingStatus] = useState('');
+  const [progressValue, setProgressValue] = useState(0);
   const { routers, addRouter } = useRouterContext();
+  
+  // Animação da barra de progresso
+  const progressAnimation = new Animated.Value(0);
 
   const screenWidth = Dimensions.get('window').width;
 
@@ -97,8 +103,8 @@ export default function Home() {
   const { colors } = useTheme();
 
   // Determina se deve mostrar estado com dados ou vazio
-  const hasData = (ROUTERS.length > 0 || routers.length > 0) && REPORTS.length > 0;
-  const isEmpty = (ROUTERS.length === 0 && routers.length === 0) && REPORTS.length === 0;
+  const hasData = routers.length > 0;
+  const isEmpty = routers.length === 0;
 
   useEffect(() => {
     console.log('Entrou na Homepage — login deu certo!');
@@ -114,18 +120,55 @@ export default function Home() {
       return;
     }
 
-    // Adiciona o novo roteador usando o contexto global
-    addRouter({
-      name: routerName.trim(),
-      description: routerDescription.trim() || 'Veja mais sobre esse roteador.'
+    // Fecha o modal de entrada e abre o modal de carregamento
+    setModalVisible(false);
+    setLoadingModalVisible(true);
+
+    // Reseta a animação da barra de progresso e status
+    progressAnimation.setValue(0);
+    setProgressValue(0);
+    setLoadingStatus('Iniciando configuração...');
+
+    // Simula etapas de progresso com animações sequenciais
+    const progressSteps = [
+      { toValue: 0.2, duration: 800, delay: 0, status: 'Conectando ao roteador...' },     // 0-20% em 0.8s
+      { toValue: 0.4, duration: 600, delay: 800, status: 'Analisando configurações...' }, // 20-40% em 0.6s
+      { toValue: 0.6, duration: 800, delay: 1400, status: 'Verificando segurança...' },  // 40-60% em 0.8s
+      { toValue: 0.8, duration: 600, delay: 2200, status: 'Finalizando configuração...' }, // 60-80% em 0.6s
+      { toValue: 1.0, duration: 800, delay: 2800, status: 'Concluindo...' },             // 80-100% em 0.8s
+    ];
+
+    // Executa as animações sequencialmente
+    progressSteps.forEach((step, index) => {
+      setTimeout(() => {
+        console.log(`Progresso: ${Math.round(step.toValue * 100)}% - ${step.status}`);
+        setLoadingStatus(step.status);
+        setProgressValue(Math.round(step.toValue * 100));
+        Animated.timing(progressAnimation, {
+          toValue: step.toValue,
+          duration: step.duration,
+          useNativeDriver: false,
+        }).start();
+      }, step.delay);
     });
 
-    // Limpa os campos e fecha o modal
-    setRouterName('');
-    setRouterDescription('');
-    setModalVisible(false);
+    // Simula o processo de adição com uma barra de progresso fake
+    setTimeout(() => {
+      // Adiciona o novo roteador usando o contexto global
+      addRouter({
+        name: routerName.trim(),
+        description: routerDescription.trim() || 'Veja mais sobre esse roteador.'
+      });
 
-    Alert.alert('Sucesso', 'Roteador adicionado com sucesso!');
+      // Fecha o modal de carregamento
+      setLoadingModalVisible(false);
+
+      // Limpa os campos
+      setRouterName('');
+      setRouterDescription('');
+
+      Alert.alert('Sucesso', 'Roteador adicionado com sucesso!');
+    }, 4000); // 4 segundos de carregamento
   };
 
   const handleCancelAddRouter = () => {
@@ -184,7 +227,7 @@ export default function Home() {
                   id={router_item.id}
                   name={router_item.name}
                   description={router_item.description}
-                  onPress={() => router.push('/(router)/routerDetails')}
+                  onPress={() => router.push(`/(router)/routerDetails?id=${router_item.id}`)}
                 />
               ))}
 
@@ -205,26 +248,27 @@ export default function Home() {
 
           {/* Seção: Relatórios */}
           <View style={styles.reports}>
-            <SectionTitle title="Histórico de relatórios" />
+            <SectionTitle title="Último relatório" />
             {hasData ? (
-              // Estado com dados - cards usando ReportCard
+              // Estado com dados - mostra mensagem de relatório disponível
               <>
-                <View style={styles.reportsContainer}>
-                  {REPORTS.map((report) => (
-                    <ReportCard
-                      key={report.id}
-                      id={report.id}
-                      networkName={report.networkName}
-                      status={report.status}
-                      date={report.date}
-                      time={report.time}
-                      onPress={() => router.push('/relatories')}
-                    />
-                  ))}
+                <View style={[styles.emptyReportCard, { backgroundColor: colors.card }]}>
+                  <View style={styles.emptyReportContent}>
+                    <View style={[styles.emptyReportIcon, { borderColor: colors.textSecondary }]}>
+                    </View>
+                    <View style={styles.emptyReportTextContainer}>
+                      <Text style={[styles.emptyReportText, { color: colors.text }]}>
+                        Relatórios disponíveis
+                      </Text>
+                      <Text style={[styles.emptyReportSubtext, { color: colors.textSecondary }]}>
+                        Clique aqui para ver relatórios detalhados
+                      </Text>
+                    </View>
+                  </View>
                 </View>
                 <TouchableOpacity onPress={() => router.push('/relatories')}>
                   <Text style={[styles.showMoreRelatories, { color: colors.textTitle }]}>
-                    Mostrar mais
+                    Ver relatórios
                   </Text>
                 </TouchableOpacity>
               </>
@@ -240,7 +284,7 @@ export default function Home() {
                         Nenhum relatório disponível
                       </Text>
                       <Text style={[styles.emptyReportSubtext, { color: colors.textSecondary }]}>
-                        Faça sua primeira checagem para ver relatórios aqui
+                        Adicione seu primeiro roteador para gerar relatórios
                       </Text>
                     </View>
                   </View>
@@ -334,6 +378,52 @@ export default function Home() {
                 </Text>
               </TouchableOpacity>
             </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Modal de carregamento */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={loadingModalVisible}
+        onRequestClose={() => {}}
+      >
+        <View style={styles.loadingModalOverlay}>
+          <View style={[styles.loadingModalContent, { backgroundColor: colors.background }]}>
+            <Text style={[styles.loadingModalTitle, { color: colors.textTitle }]}>
+              Adicionando roteador...
+            </Text>
+            
+            <Text style={[styles.loadingModalDescription, { color: colors.textSecondary }]}>
+              {loadingStatus || 'Iniciando configuração...'}
+            </Text>
+
+            {/* Barra de progresso animada */}
+            <View style={[styles.progressBarContainer, { backgroundColor: colors.card }]}>
+              <View 
+                style={[
+                  styles.progressBar, 
+                  { 
+                    backgroundColor: '#430065', // Roxo fixo para garantir visibilidade
+                    width: `${Math.max(progressValue, 1)}%`, // Mínimo 1% para ser visível
+                  }
+                ]} 
+              />
+              {/* Indicador de progresso numérico */}
+              <Text style={[styles.progressText, { color: colors.textSecondary }]}>
+                {progressValue}%
+              </Text>
+            </View>
+            
+            {/* Debug: Mostrar valor atual */}
+            <Text style={[styles.debugText, { color: colors.textSecondary }]}>
+              Progresso: {progressValue}%
+            </Text>
+
+            <Text style={[styles.loadingModalStatus, { color: colors.textSecondary }]}>
+              Aguarde, isso pode levar alguns segundos
+            </Text>
           </View>
         </View>
       </Modal>
@@ -499,6 +589,76 @@ const styles = StyleSheet.create({
   modalButtonText: {
     fontSize: 16,
     fontWeight: '600',
+  },
+
+  // Modal de carregamento
+  loadingModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  loadingModalContent: {
+    width: '100%',
+    maxWidth: 350,
+    borderRadius: 20,
+    padding: 30,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  loadingModalTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  loadingModalDescription: {
+    fontSize: 16,
+    lineHeight: 22,
+    marginBottom: 25,
+    textAlign: 'center',
+  },
+  progressBarContainer: {
+    width: '100%',
+    height: 12,
+    borderRadius: 6,
+    marginBottom: 20,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(67, 0, 101, 0.2)', // Borda roxa sutil
+  },
+  progressBar: {
+    height: '100%',
+    width: '100%',
+    borderRadius: 6,
+    shadowColor: '#430065',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  progressText: {
+    position: 'absolute',
+    right: 8,
+    top: -25,
+    fontSize: 11,
+    fontWeight: '500',
+  },
+  loadingModalStatus: {
+    fontSize: 14,
+    textAlign: 'center',
+    lineHeight: 20,
+  },
+  debugText: {
+    fontSize: 12,
+    textAlign: 'center',
+    marginTop: 10,
+    opacity: 0.7,
   },
 
   // Outros
