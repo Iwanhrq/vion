@@ -10,6 +10,8 @@ export { SectionTitle } from './SectionTitle';
 
 // Componentes de Cards
 export { ReportCard } from './ReportCard';
+export { ReportCardExpanded } from './ReportCardExpanded';
+export { ReportHistoryCard } from './ReportHistoryCard';
 export { RouterCard } from './RouterCard';
 export { RouterListCard } from './RouterListCard';
 export { TipCard } from './TipCard';

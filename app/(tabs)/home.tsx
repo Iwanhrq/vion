@@ -26,6 +26,7 @@ import { useTheme } from '../../constants/ThemeContext';
 import {
   Divider,
   NetworkStatusHeader,
+  ReportCard,
   RouterCard,
   SectionTitle,
   TipCard
@@ -93,7 +94,7 @@ export default function Home() {
   const [loadingStatus, setLoadingStatus] = useState('');
   const [progressValue, setProgressValue] = useState(0);
   const { routers, addRouter } = useRouterContext();
-  
+
   // Animação da barra de progresso
   const progressAnimation = new Animated.Value(0);
 
@@ -186,8 +187,8 @@ export default function Home() {
         {/* Header condicional */}
         {hasData ? (
           <NetworkStatusHeader
-            percentage="100%"
-            status="Sua rede está segura"
+            percentage="43%"
+            status="Vulnerabilidades detectadas"
             action="Clique aqui para analisar a rede novamente"
           />
         ) : (
@@ -248,36 +249,17 @@ export default function Home() {
 
           {/* Seção: Relatórios */}
           <View style={styles.reports}>
-            <SectionTitle title="Último relatório" />
+            <SectionTitle title="Último Relatório" />
             {hasData ? (
-              // Estado com dados - mostra mensagem de relatório disponível
-              <>
-                <View style={[styles.emptyReportCard, { backgroundColor: colors.card }]}>
-                  <View style={styles.emptyReportContent}>
-                    <View style={[styles.emptyReportIcon, { borderColor: colors.textSecondary }]}>
-                    </View>
-                    <View style={styles.emptyReportTextContainer}>
-                      <Text style={[styles.emptyReportText, { color: colors.text }]}>
-                        Relatórios disponíveis
-                      </Text>
-                      <Text style={[styles.emptyReportSubtext, { color: colors.textSecondary }]}>
-                        Clique aqui para ver relatórios detalhados
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-                <TouchableOpacity onPress={() => router.push('/relatories')}>
-                  <Text style={[styles.showMoreRelatories, { color: colors.textTitle }]}>
-                    Ver relatórios
-                  </Text>
-                </TouchableOpacity>
-              </>
+              // Estado com dados - usa o componente ReportCard
+              <ReportCard hasData={true} />
             ) : (
               // Estado vazio - card cinza com ícone circular vazio
               <>
                 <View style={[styles.emptyReportCard, { backgroundColor: colors.card }]}>
                   <View style={styles.emptyReportContent}>
-                    <View style={[styles.emptyReportIcon, { borderColor: colors.textSecondary }]}>
+
+                    <View style={[styles.emptyReportIcon, { borderColor: '#F44336' }]}>
                     </View>
                     <View style={styles.emptyReportTextContainer}>
                       <Text style={[styles.emptyReportText, { color: colors.text }]}>
@@ -298,7 +280,7 @@ export default function Home() {
 
           {/* Seção: Dicas rápidas */}
           <View style={styles.tipsContainer}>
-            <SectionTitle title="Dicas rápidas" />
+            <SectionTitle title="Dicas Rápidas" />
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
@@ -387,35 +369,35 @@ export default function Home() {
         animationType="fade"
         transparent={true}
         visible={loadingModalVisible}
-        onRequestClose={() => {}}
+        onRequestClose={() => { }}
       >
         <View style={styles.loadingModalOverlay}>
           <View style={[styles.loadingModalContent, { backgroundColor: colors.background }]}>
             <Text style={[styles.loadingModalTitle, { color: colors.textTitle }]}>
               Adicionando roteador...
             </Text>
-            
+
             <Text style={[styles.loadingModalDescription, { color: colors.textSecondary }]}>
               {loadingStatus || 'Iniciando configuração...'}
             </Text>
 
             {/* Barra de progresso animada */}
             <View style={[styles.progressBarContainer, { backgroundColor: colors.card }]}>
-              <View 
+              <View
                 style={[
-                  styles.progressBar, 
-                  { 
+                  styles.progressBar,
+                  {
                     backgroundColor: '#430065', // Roxo fixo para garantir visibilidade
                     width: `${Math.max(progressValue, 1)}%`, // Mínimo 1% para ser visível
                   }
-                ]} 
+                ]}
               />
               {/* Indicador de progresso numérico */}
               <Text style={[styles.progressText, { color: colors.textSecondary }]}>
                 {progressValue}%
               </Text>
             </View>
-            
+
             {/* Debug: Mostrar valor atual */}
             <Text style={[styles.debugText, { color: colors.textSecondary }]}>
               Progresso: {progressValue}%
@@ -482,8 +464,11 @@ const styles = StyleSheet.create({
   },
 
   // Seção Relatórios
-  reports: {},
-  reportsContainer: {},
+
+  reportsContainer: {
+    flex: 1,
+    flexDirection: 'row',
+  },
 
   // Estado vazio dos relatórios
   emptyReportCard: {
@@ -508,10 +493,10 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   emptyReportIcon: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    borderWidth: 2,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 3,
     borderStyle: 'solid',
     justifyContent: 'center',
     alignItems: 'center',
@@ -525,8 +510,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 
-  showMoreRelatories: {
-    textAlign: "center",
+  reports: {
+    marginBottom: 20,
   },
 
   // Seção Dicas
@@ -538,7 +523,7 @@ const styles = StyleSheet.create({
   // Modal
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,

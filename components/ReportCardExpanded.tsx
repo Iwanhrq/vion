@@ -3,11 +3,12 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../constants/ThemeContext';
 
-interface ReportCardProps {
+interface ReportCardExpandedProps {
   hasData: boolean;
+  noTopRadius?: boolean;
 }
 
-export const ReportCard: React.FC<ReportCardProps> = ({ hasData }) => {
+export const ReportCardExpanded: React.FC<ReportCardExpandedProps> = ({ hasData, noTopRadius = false }) => {
   const { colors } = useTheme();
 
   if (!hasData) {
@@ -30,23 +31,16 @@ export const ReportCard: React.FC<ReportCardProps> = ({ hasData }) => {
   }
 
   return (
-    <View style={[styles.reportCardWithData, { backgroundColor: colors.card }]}>
+    <View style={[
+      styles.reportCardWithData, 
+      { backgroundColor: colors.card },
+      noTopRadius && {
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+      }
+    ]}>
       <View style={styles.reportCardWithDataContent}>
-        {/* Primeiro item */}
-        <View style={styles.reportItem}>
-          <View style={[styles.reportCardWithDataIcon, { borderColor: '#F44336' }]}>
-          </View>
-          <View style={styles.reportCardWithDataTextContainer}>
-            <Text style={[styles.reportCardWithDataText, { color: colors.text }]}>
-              Nível de proteção: Baixo
-            </Text>
-            <Text style={[styles.reportCardWithDataSubtext, { color: colors.textSecondary }]}>
-              Problemas encontrados
-            </Text>
-          </View>
-        </View>
-
-        {/* Segundo item */}
+        {/* Primeiro item - Atualizar firmware */}
         <View style={[styles.reportItem, styles.secondaryReportItem]}>
           <View style={[styles.smallReportIcon, { borderColor: colors.textTitle }]}>
             <Text style={[styles.simpleIcon, { color: colors.textTitle }]}>!</Text>
@@ -62,7 +56,7 @@ export const ReportCard: React.FC<ReportCardProps> = ({ hasData }) => {
           <Ionicons name="chevron-forward" size={20} color={colors.textSecondary} />
         </View>
 
-        {/* Terceiro item */}
+        {/* Segundo item - Desativar WPS */}
         <View style={[styles.reportItem, styles.secondaryReportItem]}>
           <View style={[styles.smallReportIcon, { borderColor: colors.textTitle }]}>
             <Text style={[styles.simpleIcon, { color: colors.textTitle }]}>!</Text>
@@ -134,7 +128,7 @@ const styles = StyleSheet.create({
 
   // Estado com dados dos relatórios (quando há roteadores)
   reportCardWithData: {
-    minHeight: 220, // Diminuí a altura de 240 para 220
+    minHeight: 180, // Reduzido pois não tem o primeiro item
     borderRadius: 15,
     justifyContent: 'flex-start',
     marginBottom: 15,
@@ -156,15 +150,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 15,
     marginRight: 10,
-  },
-  reportCardWithDataIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 3,
-    borderStyle: 'solid',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   reportCardWithDataText: {
     fontSize: 16,
@@ -208,7 +193,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     marginTop: 'auto',
-    paddingTop: 8, // Diminuí de 15 para 8 para reduzir o gap
+    paddingTop: 8,
   },
   showMoreText: {
     textAlign: "center",
