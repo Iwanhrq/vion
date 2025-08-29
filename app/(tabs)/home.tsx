@@ -9,6 +9,7 @@ import {
   Alert,
   Animated,
   Dimensions,
+  Image,
   Modal,
   ScrollView,
   StyleSheet,
@@ -37,13 +38,7 @@ const ROUTERS: Array<{
   id: string;
   name: string;
   description: string;
-}> = [
-    // Comentado para testar estado vazio
-    // { id: '1', name: 'Roteador 1', description: 'Veja mais sobre esse roteador.' },
-    // { id: '2', name: 'Roteador 2', description: 'Veja mais sobre esse roteador.' },
-    // { id: '3', name: 'Roteador 3', description: 'Veja mais sobre esse roteador.' },
-    // { id: '4', name: 'Roteador 4', description: 'Veja mais sobre esse roteador.' },
-  ];
+}> = [];
 
 // Dados estáticos dos relatórios (para teste - pode ser vazio)
 const REPORTS: Array<{
@@ -52,30 +47,7 @@ const REPORTS: Array<{
   status: 'Segura' | 'Atenção' | 'Crítico';
   date: string;
   time: string;
-}> = [
-    // Comentado para testar estado vazio
-    // { 
-    //   id: '1', 
-    //   networkName: 'Rede Casa Principal', 
-    //   status: 'Segura', 
-    //   date: '15/12/2024', 
-    //   time: '14:30' 
-    // },
-    // { 
-    //   id: '2', 
-    //   networkName: 'Rede Escritório', 
-    //   status: 'Atenção', 
-    //   date: '14/12/2024', 
-    //   time: '09:15' 
-    // },
-    // { 
-    //   id: '3', 
-    //   networkName: 'Rede Café', 
-    //   status: 'Segura', 
-    //   date: '13/12/2024', 
-    //   time: '16:45' 
-    // },
-  ];
+}> = [];
 
 // Dados estáticos das dicas
 const TIPS = [
@@ -101,7 +73,7 @@ export default function Home() {
   const screenWidth = Dimensions.get('window').width;
 
   const router = useRouter();
-  const { colors } = useTheme();
+  const { colors, currentTheme } = useTheme();
 
   // Determina se deve mostrar estado com dados ou vazio
   const hasData = routers.length > 0;
@@ -132,11 +104,11 @@ export default function Home() {
 
     // Simula etapas de progresso com animações sequenciais
     const progressSteps = [
-      { toValue: 0.2, duration: 800, delay: 0, status: 'Conectando ao roteador...' },     // 0-20% em 0.8s
-      { toValue: 0.4, duration: 600, delay: 800, status: 'Analisando configurações...' }, // 20-40% em 0.6s
-      { toValue: 0.6, duration: 800, delay: 1400, status: 'Verificando segurança...' },  // 40-60% em 0.8s
-      { toValue: 0.8, duration: 600, delay: 2200, status: 'Finalizando configuração...' }, // 60-80% em 0.6s
-      { toValue: 1.0, duration: 800, delay: 2800, status: 'Concluindo...' },             // 80-100% em 0.8s
+      { toValue: 0.2, duration: 800, delay: 0, status: 'Conectando ao roteador...' },
+      { toValue: 0.4, duration: 600, delay: 800, status: 'Analisando configurações...' },
+      { toValue: 0.6, duration: 800, delay: 1400, status: 'Verificando segurança...' },
+      { toValue: 0.8, duration: 600, delay: 2200, status: 'Finalizando configuração...' },
+      { toValue: 1.0, duration: 800, delay: 2800, status: 'Concluindo...' },
     ];
 
     // Executa as animações sequencialmente
@@ -155,21 +127,17 @@ export default function Home() {
 
     // Simula o processo de adição com uma barra de progresso fake
     setTimeout(() => {
-      // Adiciona o novo roteador usando o contexto global
       addRouter({
         name: routerName.trim(),
         description: routerDescription.trim() || 'Veja mais sobre esse roteador.'
       });
 
-      // Fecha o modal de carregamento
       setLoadingModalVisible(false);
-
-      // Limpa os campos
       setRouterName('');
       setRouterDescription('');
 
       Alert.alert('Sucesso', 'Roteador adicionado com sucesso!');
-    }, 4000); // 4 segundos de carregamento
+    }, 4000);
   };
 
   const handleCancelAddRouter = () => {
@@ -210,7 +178,6 @@ export default function Home() {
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={styles.routersScroll}
             >
-              {/* Roteadores estáticos */}
               {ROUTERS.map((router_item) => (
                 <RouterCard
                   key={router_item.id}
@@ -221,7 +188,6 @@ export default function Home() {
                 />
               ))}
 
-              {/* Roteadores adicionados pelo usuário */}
               {routers.map((router_item) => (
                 <RouterCard
                   key={router_item.id}
@@ -244,38 +210,30 @@ export default function Home() {
             </ScrollView>
           </View>
 
-          {/* Linha divisória */}
           <Divider />
 
           {/* Seção: Relatórios */}
           <View style={styles.reports}>
             <SectionTitle title="Último Relatório" />
             {hasData ? (
-              // Estado com dados - usa o componente ReportCard
               <ReportCard hasData={true} />
             ) : (
-              // Estado vazio - card cinza com ícone circular vazio
-              <>
-                <View style={[styles.emptyReportCard, { backgroundColor: colors.card }]}>
-                  <View style={styles.emptyReportContent}>
-
-                    <View style={[styles.emptyReportIcon, { borderColor: '#F44336' }]}>
-                    </View>
-                    <View style={styles.emptyReportTextContainer}>
-                      <Text style={[styles.emptyReportText, { color: colors.text }]}>
-                        Nenhum relatório disponível
-                      </Text>
-                      <Text style={[styles.emptyReportSubtext, { color: colors.textSecondary }]}>
-                        Adicione seu primeiro roteador para gerar relatórios
-                      </Text>
-                    </View>
+              <View style={[styles.emptyReportCard, { backgroundColor: colors.card }]}>
+                <View style={styles.emptyReportContent}>
+                  <View style={[styles.emptyReportIcon, { borderColor: '#F44336' }]} />
+                  <View style={styles.emptyReportTextContainer}>
+                    <Text style={[styles.emptyReportText, { color: colors.text }]}>
+                      Nenhum relatório disponível
+                    </Text>
+                    <Text style={[styles.emptyReportSubtext, { color: colors.textSecondary }]}>
+                      Adicione seu primeiro roteador para gerar relatórios
+                    </Text>
                   </View>
                 </View>
-              </>
+              </View>
             )}
           </View>
 
-          {/* Linha divisória */}
           <Divider />
 
           {/* Seção: Dicas rápidas */}
@@ -298,6 +256,15 @@ export default function Home() {
           </View>
         </View>
       </ScrollView>
+
+      {/* BOTÃO FIXO (FAB) */}
+      <TouchableOpacity
+        style={[styles.fabButton, { backgroundColor: currentTheme === 'dark' ? colors.buttonTertiary : colors.buttonPrimary }]}
+        onPress={() => Alert.alert('FAB clicado', 'Aqui você pode abrir o chat com o robô')}
+      >
+        {/* Troque o Text por <Image source={require('../../assets/images/robo.png')} style={styles.fabIcon}/> */}
+        <Image source={require('../../assets/images/robozinho 1.png')} style={styles.fabIcon} />
+      </TouchableOpacity>
 
       {/* Modal para adicionar roteador */}
       <Modal
@@ -381,24 +348,21 @@ export default function Home() {
               {loadingStatus || 'Iniciando configuração...'}
             </Text>
 
-            {/* Barra de progresso animada */}
             <View style={[styles.progressBarContainer, { backgroundColor: colors.card }]}>
               <View
                 style={[
                   styles.progressBar,
                   {
-                    backgroundColor: '#430065', // Roxo fixo para garantir visibilidade
-                    width: `${Math.max(progressValue, 1)}%`, // Mínimo 1% para ser visível
+                    backgroundColor: '#430065',
+                    width: `${Math.max(progressValue, 1)}%`,
                   }
                 ]}
               />
-              {/* Indicador de progresso numérico */}
               <Text style={[styles.progressText, { color: colors.textSecondary }]}>
                 {progressValue}%
               </Text>
             </View>
 
-            {/* Debug: Mostrar valor atual */}
             <Text style={[styles.debugText, { color: colors.textSecondary }]}>
               Progresso: {progressValue}%
             </Text>
@@ -421,13 +385,40 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
-
   content: {
     padding: 20,
     paddingTop: 22,
     paddingBottom: 40,
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
+  },
+
+  // FAB (botão fixo)
+  fabButton: {
+  position: 'absolute',
+  bottom: 80, // altura acima da tab bar
+  right: 20, // distância da borda direita
+  width: 70,
+  height: 70,
+  borderRadius: 35,
+  justifyContent: 'center',
+  alignItems: 'center',
+  elevation: 6,
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.3,
+  shadowRadius: 4,
+},
+
+  fabIconText: {
+    fontSize: 28,
+    color: '#fff',
+  },
+  fabIcon: {
+    width: 40,
+    height: 40,
+    resizeMode: 'contain',
+    tintColor: '#fff',
   },
 
   // Seção Roteadores
@@ -438,8 +429,6 @@ const styles = StyleSheet.create({
   routersScroll: {
     paddingRight: 20,
   },
-
-  // Estado vazio dos roteadores
   emptyRouterCard: {
     height: 180,
     width: 160,
@@ -463,14 +452,10 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
 
-  // Seção Relatórios
-
-  reportsContainer: {
-    flex: 1,
-    flexDirection: 'row',
+  // Relatórios
+  reports: {
+    marginBottom: 20,
   },
-
-  // Estado vazio dos relatórios
   emptyReportCard: {
     height: 120,
     borderRadius: 15,
@@ -510,11 +495,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 
-  reports: {
-    marginBottom: 20,
-  },
-
-  // Seção Dicas
+  // Dicas
   tipsContainer: {},
   tipsScroll: {
     paddingRight: 20,
@@ -570,13 +551,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: 5,
   },
-
   modalButtonText: {
     fontSize: 16,
     fontWeight: '600',
   },
 
-  // Modal de carregamento
+  // Loading Modal
   loadingModalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
@@ -615,7 +595,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: 'rgba(67, 0, 101, 0.2)', // Borda roxa sutil
+    borderColor: 'rgba(67, 0, 101, 0.2)',
   },
   progressBar: {
     height: '100%',
@@ -646,14 +626,12 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
 
-  // Outros
   errorText: {
     color: 'tomato',
     marginTop: 10,
     textAlign: 'center',
     fontSize: 14,
   },
-
   botaologout: {
     color: 'rgba(255,255,255,0.5)',
     fontSize: 14,
