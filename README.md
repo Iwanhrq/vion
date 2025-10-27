@@ -7,6 +7,10 @@ Este repositório contém **todo o front-end do aplicativo mobile**, desenvolvid
 > O Vion surgiu com o objetivo de **conscientizar os usuários sobre segurança digital** e demonstrar, de forma acessível e interativa, **como a tecnologia pode ser usada para prevenir fraudes e proteger redes domésticas**.  
 > O protótipo apresenta **interfaces funcionais e fluxos de navegação** que simulam a experiência de uso de um app real de diagnóstico, combinando design moderno, clareza informacional e propósito social.  
 
+<p align="center">
+  <img width="600" height="400" alt="Projetos - Portfólio (2)" src="https://github.com/user-attachments/assets/dd872490-3149-4b6d-aef1-bf2fca4d6f26" />
+</p>
+
 ---
 
 ## 🛠️ Tecnologias Utilizadas
@@ -16,3 +20,12 @@ Este repositório contém **todo o front-end do aplicativo mobile**, desenvolvid
 - **TypeScript**  
 - **Figma**  
 - **Git & GitHub**  
+![Uploading Projetos - Portfólio (2).png…]()
+
+## 👥 Equipe de Desenvolvimento
+
+- **Ivan Henrique** — [@Iwanhrq](https://github.com/Iwanhrq)  
+- **Mariana Araripe** — [@marianaararipe](https://github.com/marianaararipe)  
+- **Emile Nogueira** — [@EmileCristine](https://github.com/EmileCristine)  
+- **Pedro Filipini** — [@pedrofilipini2007](https://github.com/pedrofilipini2007)
+
